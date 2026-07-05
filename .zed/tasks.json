@@ -53,7 +53,7 @@
 
   {
     "label": "build-run-release",
-    "command": "sh build.sh --release; bin/release/main.exe",
+    "command": "sh build.sh --release; build/release/main.exe",
     //"args": [],
     // Env overrides for the command, will be appended to the terminal's environment from the settings.
     // "env": { "foo": "bar" },

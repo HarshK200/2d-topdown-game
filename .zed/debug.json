@@ -5,9 +5,9 @@
 [
   {
     "adapter": "CodeLLDB",
-    "label": "Debug Main",
+    "label": "debug-main",
     "build": "build-debug",
     "request": "launch",
-    "program": "bin/debug/main.exe",
+    "program": "build/debug/main.exe",
   },
 ]

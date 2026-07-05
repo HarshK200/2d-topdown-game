@@ -2,8 +2,8 @@
 
 # CONSTANTS
 PROJECT_DIR="."
-RELEASE_BUILD_DIR="bin/release"
-DEBUG_BUILD_DIR="bin/debug"
+RELEASE_BUILD_DIR="build/release"
+DEBUG_BUILD_DIR="build/debug"
 
 # input arguments
 build_mode=$1 # could be release or debug
