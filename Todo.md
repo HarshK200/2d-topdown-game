@@ -1,11 +1,11 @@
 # CORE REQUIREMENTS
 
-- [ ] figure out how to setup sokol
-  - [ ] Build sokol static library
-  - [ ] Setup sokol bindings for correct intellesence
-  - [ ] add sokol to build script
+- [x] figure out how to setup sokol
+  - [x] Build sokol static library
+  - [x] Setup sokol bindings for correct intellisense
+  - [?] add sokol to build script (Don't know if this is needed right now)
   - [ ] figure out all that shader nonsense for sokol randy talked about
-- [ ] Create a window using sokol
+- [x] Create a window using sokol
 - [ ] Draw a Triangle
 - [ ] Draw rect
 - [ ] Load textures/files in memory

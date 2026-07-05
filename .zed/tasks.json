@@ -1,9 +1,10 @@
 // Project tasks configuration. See https://zed.dev/docs/tasks for documentation.
 
 [
+  // release build task
   {
-    "label": "build-release",
-    "command": "sh build.sh --release",
+    "label": "build-release-win32",
+    "command": "build.bat --release",
     //"args": [],
     // Env overrides for the command, will be appended to the terminal's environment from the settings.
     // "env": { "foo": "bar" },
@@ -17,18 +18,17 @@
     "reveal": "no_focus",
     // What to do with the terminal pane and tab, after the command had finished:
     "hide": "on_success",
-    "shell": {
-      "program": "nu",
-    },
+    "shell": { "program": "cmd" },
     // Whether to show the task line in the output of the spawned task, defaults to `true`.
     "show_summary": true,
     // Whether to show the command line in the output of the spawned task, defaults to `true`.
     "show_command": true,
   },
 
+  // debug build task
   {
-    "label": "build-debug",
-    "command": "sh build.sh --debug",
+    "label": "build-debug-win32",
+    "command": "build.bat --debug",
     //"args": [],
     // Env overrides for the command, will be appended to the terminal's environment from the settings.
     // "env": { "foo": "bar" },
@@ -42,18 +42,17 @@
     "reveal": "no_focus",
     // What to do with the terminal pane and tab, after the command had finished:
     "hide": "on_success",
-    "shell": {
-      "program": "nu",
-    },
+    "shell": { "program": "cmd" },
     // Whether to show the task line in the output of the spawned task, defaults to `true`.
     "show_summary": true,
     // Whether to show the command line in the output of the spawned task, defaults to `true`.
     "show_command": true,
   },
 
+  // build and run release task
   {
-    "label": "build-run-release",
-    "command": "sh build.sh --release; build/release/main.exe",
+    "label": "build-run-release-win32",
+    "command": "build.bat --release && build\\release\\main.exe",
     //"args": [],
     // Env overrides for the command, will be appended to the terminal's environment from the settings.
     // "env": { "foo": "bar" },
@@ -67,9 +66,7 @@
     "reveal": "no_focus",
     // What to do with the terminal pane and tab, after the command had finished:
     "hide": "on_success",
-    "shell": {
-      "program": "nu",
-    },
+    "shell": { "program": "cmd" },
     // Whether to show the task line in the output of the spawned task, defaults to `true`.
     "show_summary": true,
     // Whether to show the command line in the output of the spawned task, defaults to `true`.
