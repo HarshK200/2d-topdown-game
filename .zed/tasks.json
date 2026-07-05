@@ -52,7 +52,7 @@
   },
 
   {
-    "label": "build-and-run-release",
+    "label": "build-run-release",
     "command": "sh build.sh --release; bin/release/main.exe",
     //"args": [],
     // Env overrides for the command, will be appended to the terminal's environment from the settings.
@@ -66,7 +66,7 @@
     // What to do with the terminal pane and tab, after the command was started:
     "reveal": "no_focus",
     // What to do with the terminal pane and tab, after the command had finished:
-    "hide": "never",
+    "hide": "on_success",
     "shell": {
       "program": "nu",
     },
