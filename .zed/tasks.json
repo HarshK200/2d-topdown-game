@@ -1,0 +1,78 @@
+// Project tasks configuration. See https://zed.dev/docs/tasks for documentation.
+
+[
+  {
+    "label": "build-release",
+    "command": "sh build.sh --release",
+    //"args": [],
+    // Env overrides for the command, will be appended to the terminal's environment from the settings.
+    // "env": { "foo": "bar" },
+    // Current working directory to spawn the command into, defaults to current project root.
+    //"cwd": "/path/to/working/directory",
+    // Whether to use a new terminal tab or reuse the existing one to spawn the process, defaults to `false`.
+    "use_new_terminal": false,
+    // Whether to allow multiple instances of the same task to be run, or rather wait for the existing ones to finish, defaults to `false`.
+    "allow_concurrent_runs": false,
+    // What to do with the terminal pane and tab, after the command was started:
+    "reveal": "no_focus",
+    // What to do with the terminal pane and tab, after the command had finished:
+    "hide": "on_success",
+    "shell": {
+      "program": "nu",
+    },
+    // Whether to show the task line in the output of the spawned task, defaults to `true`.
+    "show_summary": true,
+    // Whether to show the command line in the output of the spawned task, defaults to `true`.
+    "show_command": true,
+  },
+
+  {
+    "label": "build-debug",
+    "command": "sh build.sh --debug",
+    //"args": [],
+    // Env overrides for the command, will be appended to the terminal's environment from the settings.
+    // "env": { "foo": "bar" },
+    // Current working directory to spawn the command into, defaults to current project root.
+    //"cwd": "/path/to/working/directory",
+    // Whether to use a new terminal tab or reuse the existing one to spawn the process, defaults to `false`.
+    "use_new_terminal": false,
+    // Whether to allow multiple instances of the same task to be run, or rather wait for the existing ones to finish, defaults to `false`.
+    "allow_concurrent_runs": false,
+    // What to do with the terminal pane and tab, after the command was started:
+    "reveal": "no_focus",
+    // What to do with the terminal pane and tab, after the command had finished:
+    "hide": "on_success",
+    "shell": {
+      "program": "nu",
+    },
+    // Whether to show the task line in the output of the spawned task, defaults to `true`.
+    "show_summary": true,
+    // Whether to show the command line in the output of the spawned task, defaults to `true`.
+    "show_command": true,
+  },
+
+  {
+    "label": "build-and-run-release",
+    "command": "sh build.sh --release; bin/release/main.exe",
+    //"args": [],
+    // Env overrides for the command, will be appended to the terminal's environment from the settings.
+    // "env": { "foo": "bar" },
+    // Current working directory to spawn the command into, defaults to current project root.
+    //"cwd": "/path/to/working/directory",
+    // Whether to use a new terminal tab or reuse the existing one to spawn the process, defaults to `false`.
+    "use_new_terminal": false,
+    // Whether to allow multiple instances of the same task to be run, or rather wait for the existing ones to finish, defaults to `false`.
+    "allow_concurrent_runs": false,
+    // What to do with the terminal pane and tab, after the command was started:
+    "reveal": "no_focus",
+    // What to do with the terminal pane and tab, after the command had finished:
+    "hide": "never",
+    "shell": {
+      "program": "nu",
+    },
+    // Whether to show the task line in the output of the spawned task, defaults to `true`.
+    "show_summary": true,
+    // Whether to show the command line in the output of the spawned task, defaults to `true`.
+    "show_command": true,
+  },
+]
