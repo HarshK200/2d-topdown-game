@@ -1,5 +1,7 @@
 bin/
 build/
+build.exe
+
 third_party/sokol/**/**.dll
 third_party/sokol/**/**.exp
 third_party/sokol/**/**.lib
