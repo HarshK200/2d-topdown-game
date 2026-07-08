@@ -1,20 +1,25 @@
+// This build script uses odin version dev-2026-06-nightly:7ab61e4
 package build
 
 import "base:runtime"
 import "core:fmt"
 import "core:log"
+import "core:mem"
 import "core:os"
+import "core:strings"
 import "core:time"
 
-TEMP_BUILD_FILES_PATH :: "./build"
+RELATIVE_PROJECT_PATH :: "."
+RELATIVE_DEBUG_PATH :: "./build/debug"
+RELATIVE_RELEASE_PATH :: "./build/release"
+RELATIVE_SOKOL_SHDC_EXE_PATH :: "./third_party/sokol/sokol-shdc.exe"
+DEFAULT_RELATIVE_SHADER_FILES_PATHS_ARG :: "--shader_files=test.glsl"
 
 main :: proc() {
 	context.logger = log.create_console_logger()
 
 	start_time := time.now()
-
 	exit_code: int = run()
-
 	build_time := time.diff(start_time, time.now())
 	log.infof("Finished build in: %s", build_time)
 
@@ -24,34 +29,51 @@ main :: proc() {
 run :: proc() -> int {
 	err: os.Error
 
-	build_mode: string
+	// NOTE: all these paths are absolute paths
 	project_path: string
 	outdir_path: string
 	sokol_shdc_path: string
+	shader_files_paths: []string
 
+	build_mode: string
 	build_flags: [dynamic]string
+
 	defer delete(build_flags)
 
+	// second argument is the build_mode e.g. --debug
 	if len(os.args) < 2 {
 		log.error("No build_mode specified.\navailable options are:\n\t--debug\n\t--release")
 		return 1
-	} else {
-		build_mode = os.args[1]
+	}
+	// third argument is the shaderfiles e.g. --shader_files=shaders/myshader.glsl
+	if len(os.args) > 3 {
+		shader_files_paths = parse_shader_files_arg(os.args[2])
 	}
 
-	project_path, err = os.get_absolute_path(".", context.allocator)
-	if err != nil {panic("Couldn't resolve project directory absolute path")}
+	// Setup input arguments (NOTE: os.args[0] is the executable path. custom args start from index 1)
+	build_mode = os.args[1]
+	project_path, err = os.get_absolute_path(RELATIVE_PROJECT_PATH, context.allocator)
+	if err != nil {
+		log.error("Couldn't resolve project directory absolute path")
+		return 1
+	}
 
 	switch {
 	case build_mode == "--debug":
-		outdir_path, err = os.get_absolute_path("./build/debug", context.allocator)
-		if err != nil {panic("Couldn't resolve output directory absolute path")}
+		outdir_path, err = os.get_absolute_path(RELATIVE_DEBUG_PATH, context.allocator)
+		if err != nil {
+			log.error("Couldn't resolve output directory absolute path")
+			return 1
+		}
 
 		append(&build_flags, "-debug")
 
 	case build_mode == "--release":
-		outdir_path, err = os.get_absolute_path("./build/release", context.allocator)
-		if err != nil {panic("Couldn't resolve output directory absolute path")}
+		outdir_path, err = os.get_absolute_path(RELATIVE_RELEASE_PATH, context.allocator)
+		if err != nil {
+			log.error("Couldn't resolve output directory absolute path")
+			return 1
+		}
 
 		append(&build_flags, "-o:speed")
 		append(&build_flags, "-no-bounds-check")
@@ -62,11 +84,12 @@ run :: proc() -> int {
 		return 1
 	}
 
-	sokol_shdc_path, err = os.get_absolute_path(
-		"./third_party/sokol/sokol-shdc.exe",
-		context.allocator,
-	)
-	if err != nil {panic("Couldn't resolve sokol-shdc.exe absolute path")}
+	// setup sokol shdc path
+	sokol_shdc_path, err = os.get_absolute_path(RELATIVE_SOKOL_SHDC_EXE_PATH, context.allocator)
+	if err != nil {
+		log.error("Couldn't resolve sokol-shdc.exe absolute path")
+		return 1
+	}
 
 	// check if output folder exists
 	info: os.File_Info
@@ -118,5 +141,17 @@ run :: proc() -> int {
 	delete(stdout)
 	delete(stderr)
 
+	// TODO: Compile files from --shader_files argument using sokol-shdc
+
 	return 0
+}
+
+// NOTE - expects shaderfiles_arg to look like: --shader_files=shaders/example1.glsl,shaders/example2.glsl,shaders/example3.glsl
+// where shaders/example1.glsl is path of the shader file relative to the process path, NOT the build executable path
+parse_shader_files_arg :: proc(shader_files_args: string) -> []string {
+	parts: []string = strings.split(shader_files_args, "=")
+	defer delete(parts)
+	raw_shaderfiles_paths: []string = strings.split(parts[1], ",")
+
+	return raw_shaderfiles_paths
 }

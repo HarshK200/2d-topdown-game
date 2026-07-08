@@ -5,7 +5,7 @@
 [
   {
     "adapter": "CodeLLDB",
-    "label": "debug-main",
+    "label": "debug-main-win32",
     "build": "build-debug-win32",
     "request": "launch",
     "program": "build/debug/main.exe",
