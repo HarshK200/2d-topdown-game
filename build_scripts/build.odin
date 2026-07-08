@@ -5,6 +5,7 @@ import "base:runtime"
 import "core:fmt"
 import "core:log"
 import "core:mem"
+import "core:mem/virtual"
 import "core:os"
 import "core:strings"
 import "core:time"
@@ -27,6 +28,17 @@ main :: proc() {
 }
 
 run :: proc() -> int {
+	// create a virtual arena, so i don't have to call delete on every single allocation,
+	// i allocate an Arena i.e. a chunk of memory at once and delete it at the end of the function
+	arena: virtual.Arena
+	allocator_err := virtual.arena_init_growing(&arena, 1 * mem.Megabyte)
+	if allocator_err != nil {
+		log.error("Couldn't initialize arena")
+		return 1
+	}
+	defer virtual.arena_destroy(&arena)
+	context.allocator = virtual.arena_allocator(&arena)
+
 	err: os.Error
 
 	// NOTE: all these paths are absolute paths
@@ -37,8 +49,6 @@ run :: proc() -> int {
 
 	build_mode: string
 	build_flags: [dynamic]string
-
-	defer delete(build_flags)
 
 	// second argument is the build_mode e.g. --debug
 	if len(os.args) < 2 {
@@ -114,7 +124,6 @@ run :: proc() -> int {
 		log.error(err)
 		return 1
 	}
-	defer os.file_info_delete(info, context.allocator)
 
 
 	// Creating the build command
@@ -123,7 +132,6 @@ run :: proc() -> int {
 
 	out_flag := fmt.tprintf("-out:%s/main.exe", outdir_path)
 	cmd: [dynamic]string
-	defer delete(cmd)
 
 	append(&cmd, "odin", "build", project_path, out_flag)
 	for flag in build_flags {
@@ -138,8 +146,6 @@ run :: proc() -> int {
 	if (state.exit_code > 0) {
 		log.error(string(stdout), string(stderr))
 	}
-	delete(stdout)
-	delete(stderr)
 
 	// TODO: Compile files from --shader_files argument using sokol-shdc
 
@@ -149,9 +155,8 @@ run :: proc() -> int {
 // NOTE - expects shaderfiles_arg to look like: --shader_files=shaders/example1.glsl,shaders/example2.glsl,shaders/example3.glsl
 // where shaders/example1.glsl is path of the shader file relative to the process path, NOT the build executable path
 parse_shader_files_arg :: proc(shader_files_args: string) -> []string {
-	parts: []string = strings.split(shader_files_args, "=")
-	defer delete(parts)
-	raw_shaderfiles_paths: []string = strings.split(parts[1], ",")
+	raw_shaderfiles_paths: []string = strings.split(strings.split(shader_files_args, "=")[1], ",")
 
+	// TODO: loop through all the file paths and convert them to absolute paths by using os.get_absolute_path()
 	return raw_shaderfiles_paths
 }
