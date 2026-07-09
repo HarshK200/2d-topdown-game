@@ -10,11 +10,10 @@ import "core:os"
 import "core:strings"
 import "core:time"
 
-RELATIVE_PROJECT_PATH :: "."
+RELATIVE_SRC_PATH :: "." // relative path of src directory to the root of the project i.e. "."
 RELATIVE_DEBUG_PATH :: "./build/debug"
 RELATIVE_RELEASE_PATH :: "./build/release"
-RELATIVE_SOKOL_SHDC_EXE_PATH :: "./third_party/sokol/sokol-shdc.exe"
-DEFAULT_RELATIVE_SHADER_FILES_PATHS_ARG :: "--shader_files=test.glsl"
+OUTPUT_EXE_NAME :: "main.exe"
 
 main :: proc() {
 	context.logger = log.create_console_logger()
@@ -39,35 +38,26 @@ run :: proc() -> int {
 	defer virtual.arena_destroy(&arena)
 	context.allocator = virtual.arena_allocator(&arena)
 
-	err: os.Error
 
 	// NOTE: all these paths are absolute paths
 	project_path: string
 	outdir_path: string
-	sokol_shdc_path: string
-	shader_files_paths: []string
 
 	build_mode: string
 	build_flags: [dynamic]string
+
+	// =============== Parse input arguments ===============
+
+	err: os.Error
 
 	// second argument is the build_mode e.g. --debug
 	if len(os.args) < 2 {
 		log.error("No build_mode specified.\navailable options are:\n\t--debug\n\t--release")
 		return 1
 	}
-	// third argument is the shaderfiles e.g. --shader_files=shaders/myshader.glsl
-	if len(os.args) > 3 {
-		shader_files_paths = parse_shader_files_arg(os.args[2])
-	}
-
-	// Setup input arguments (NOTE: os.args[0] is the executable path. custom args start from index 1)
 	build_mode = os.args[1]
-	project_path, err = os.get_absolute_path(RELATIVE_PROJECT_PATH, context.allocator)
-	if err != nil {
-		log.error("Couldn't resolve project directory absolute path")
-		return 1
-	}
 
+	// =============== Setup odin build mode and arguments ===============
 	switch {
 	case build_mode == "--debug":
 		outdir_path, err = os.get_absolute_path(RELATIVE_DEBUG_PATH, context.allocator)
@@ -93,13 +83,13 @@ run :: proc() -> int {
 		log.error("Invalid build mode")
 		return 1
 	}
-
-	// setup sokol shdc path
-	sokol_shdc_path, err = os.get_absolute_path(RELATIVE_SOKOL_SHDC_EXE_PATH, context.allocator)
+	project_path, err = os.get_absolute_path(RELATIVE_SRC_PATH, context.allocator)
 	if err != nil {
-		log.error("Couldn't resolve sokol-shdc.exe absolute path")
+		log.error("Couldn't resolve project directory absolute path")
 		return 1
 	}
+
+	// =============== Setup build output directory ===============
 
 	// check if output folder exists
 	info: os.File_Info
@@ -126,37 +116,24 @@ run :: proc() -> int {
 	}
 
 
-	// Creating the build command
+	// =============== Creating the build command ===============
 	log.infof("Build mode: %s", build_mode)
 	log.info("Building...\n")
 
-	out_flag := fmt.tprintf("-out:%s/main.exe", outdir_path)
-	cmd: [dynamic]string
+	out_flag := fmt.tprintf("-out:%s/%s", outdir_path, OUTPUT_EXE_NAME)
+	odin_build_cmd: [dynamic]string
 
-	append(&cmd, "odin", "build", project_path, out_flag)
-	for flag in build_flags {
-		append(&cmd, flag)
-	}
+	append(&odin_build_cmd, "odin", "build", project_path, out_flag)
+	append(&odin_build_cmd, ..build_flags[:])
 
-	// Running the build command
-	desc := os.Process_Desc {
-		command = cmd[:],
+	// =============== Running the build command ===============
+	odin_build_desc := os.Process_Desc {
+		command = odin_build_cmd[:],
 	}
-	state, stdout, stderr, e := os.process_exec(desc, context.allocator)
+	log.infof("Build command: %s", strings.join(odin_build_cmd[:], " "))
+	state, stdout, stderr, e := os.process_exec(odin_build_desc, context.allocator)
 	if (state.exit_code > 0) {
 		log.error(string(stdout), string(stderr))
 	}
-
-	// TODO: Compile files from --shader_files argument using sokol-shdc
-
 	return 0
-}
-
-// NOTE - expects shaderfiles_arg to look like: --shader_files=shaders/example1.glsl,shaders/example2.glsl,shaders/example3.glsl
-// where shaders/example1.glsl is path of the shader file relative to the process path, NOT the build executable path
-parse_shader_files_arg :: proc(shader_files_args: string) -> []string {
-	raw_shaderfiles_paths: []string = strings.split(strings.split(shader_files_args, "=")[1], ",")
-
-	// TODO: loop through all the file paths and convert them to absolute paths by using os.get_absolute_path()
-	return raw_shaderfiles_paths
 }
