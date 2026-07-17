@@ -49,11 +49,13 @@ src/
 - [x] figure out how to setup sokol
   - [x] Build sokol static library
   - [x] Setup sokol bindings for correct intellisense
-  - [ ] Write the build script for as build.odin (package build)
-  - [ ] Change the build .bat so it just calls build.odin
-  - [ ] figure out all that shader nonsense for sokol randy talked about
+  - [x] Write the build script for as build.odin (package build)
 - [x] Create a window using sokol
-- [ ] Draw a Triangle
+- [x] write a basic shader and compile it using sokol-shdc
+- [x] Draw a Triangle
+
+- [ ] write a build_scripts/compile_shaders.odin which compiles all the shaders in src/shaders folder and outputs there shader_name.odin file in that folder based on platform specified as argument
+
 - [ ] Draw rect
 - [ ] Load textures/files in memory
 - [ ] Upload textures/files to GPU
