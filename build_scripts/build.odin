@@ -10,7 +10,7 @@ import "core:os"
 import "core:strings"
 import "core:time"
 
-RELATIVE_SRC_PATH :: "." // relative path of src directory to the root of the project i.e. "."
+RELATIVE_SRC_PATH :: "./src" // relative path of src directory to the root of the project i.e. "."
 RELATIVE_DEBUG_PATH :: "./build/debug"
 RELATIVE_RELEASE_PATH :: "./build/release"
 OUTPUT_EXE_NAME :: "main.exe"
@@ -134,6 +134,7 @@ run :: proc() -> int {
 	state, stdout, stderr, e := os.process_exec(odin_build_desc, context.allocator)
 	if (state.exit_code > 0) {
 		log.error(string(stdout), string(stderr))
+		return state.exit_code
 	}
 	return 0
 }

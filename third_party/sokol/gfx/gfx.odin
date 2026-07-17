@@ -5320,4 +5320,3 @@ Gl_View_Info :: struct {
     msaa_render_buffer : u32,
     msaa_resolve_frame_buffer : u32,
 }
-
