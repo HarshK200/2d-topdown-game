@@ -7,6 +7,7 @@ import "core:log"
 import "core:mem"
 import "core:mem/virtual"
 import "core:os"
+import "core:path/filepath"
 import "core:strings"
 import "core:time"
 
@@ -39,9 +40,10 @@ run :: proc() -> int {
 	context.allocator = virtual.arena_allocator(&arena)
 
 
-	// NOTE: all these paths are absolute paths
+	// NOTE: all these paths should be set as absolute paths NOT RELATIVE
 	project_path: string
 	outdir_path: string
+	shader_out_path: string
 
 	build_mode: string
 	build_flags: [dynamic]string
@@ -78,6 +80,9 @@ run :: proc() -> int {
 		append(&build_flags, "-o:speed")
 		append(&build_flags, "-no-bounds-check")
 		append(&build_flags, "-disable-assert")
+
+	case build_mode == "--shader-only":
+		return compile_shaders()
 
 	case:
 		log.error("Invalid build mode")
@@ -120,8 +125,20 @@ run :: proc() -> int {
 	log.infof("Build mode: %s", build_mode)
 	log.info("Building...\n")
 
-	out_flag := fmt.tprintf("-out:%s/%s", outdir_path, OUTPUT_EXE_NAME)
 	odin_build_cmd: [dynamic]string
+
+	out_flag: string
+	out_flag, err = filepath.join({outdir_path, OUTPUT_EXE_NAME})
+	if err != nil {
+		log.errorf(
+			"Couldn't join outdir_path: %s\nwith\nOutput exe name %s",
+			outdir_path,
+			OUTPUT_EXE_NAME,
+		)
+		log.error(err)
+		return 1
+	}
+	out_flag = fmt.tprintf("-out:%s", out_flag)
 
 	append(&odin_build_cmd, "odin", "build", project_path, out_flag)
 	append(&odin_build_cmd, ..build_flags[:])

@@ -4,7 +4,7 @@ import sapp "../third_party/sokol/app"
 import sg "../third_party/sokol/gfx"
 import sglue "../third_party/sokol/glue"
 import slog "../third_party/sokol/log"
-import "./shaders"
+import shaders "./shaders/out"
 import "base:runtime"
 import "core:log"
 
@@ -64,7 +64,12 @@ init :: proc "c" () {
 	)
 
 	// load and compile shader
-	shader := sg.make_shader(shaders.main_shader_desc(sg.query_backend()))
+	shader := sg.make_shader(shaders.triangle_shader_desc(sg.query_backend()))
+
+	state.pass_action.colors[0] = {
+		load_action = .CLEAR,
+		clear_value = {0.702, 0.922, 0.949, 1.00},
+	}
 
 	state.pipeline = sg.make_pipeline(
 		{
@@ -74,10 +79,6 @@ init :: proc "c" () {
 		},
 	)
 
-	state.pass_action.colors[0] = {
-		load_action = .CLEAR,
-		clear_value = {0.702, 0.922, 0.949, 1.00},
-	}
 }
 
 frame :: proc "c" () {
