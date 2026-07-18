@@ -17,13 +17,13 @@ RELATIVE_RELEASE_PATH :: "./build/release"
 OUTPUT_EXE_NAME :: "main.exe"
 
 main :: proc() {
-	context.logger = log.create_console_logger()
-
 	start_time := time.now()
-	exit_code: int = run()
-	build_time := time.diff(start_time, time.now())
-	log.infof("Finished build in: %s", build_time)
 
+	context.logger = log.create_console_logger()
+	exit_code: int = run()
+
+	build_time := time.diff(start_time, time.now())
+	log.infof("Finished build in TOTAL: %s", build_time)
 	os.exit(exit_code)
 }
 
@@ -82,6 +82,7 @@ run :: proc() -> int {
 		append(&build_flags, "-disable-assert")
 
 	case build_mode == "--shader-only":
+		// only compile shaders and return early
 		return compile_shaders()
 
 	case:
@@ -94,6 +95,13 @@ run :: proc() -> int {
 		return 1
 	}
 
+	// compile shaders
+	exit_code := compile_shaders()
+	if exit_code != 0 {
+		log.error("Error compiling shaders")
+		return 1
+	}
+
 	// =============== Setup build output directory ===============
 
 	// check if output folder exists
@@ -102,8 +110,6 @@ run :: proc() -> int {
 
 	if err == nil {
 		// directory exists: Clean it
-		log.warn("Output build directory already exists")
-		log.infof("Removing dir: %s", outdir_path)
 		err = os.remove_all(outdir_path)
 		if err != nil {
 			log.error("Couldn't delete the existing output directory")
@@ -112,7 +118,6 @@ run :: proc() -> int {
 		}
 	}
 	// Create fresh output build directory
-	log.infof("Creating ouput build directory at %s", outdir_path)
 	err = os.make_directory_all(outdir_path) // make directory recursive
 	if err != nil {
 		log.errorf("Couldn't create output directory.\n%s", outdir_path)
@@ -123,7 +128,6 @@ run :: proc() -> int {
 
 	// =============== Creating the build command ===============
 	log.infof("Build mode: %s", build_mode)
-	log.info("Building...\n")
 
 	odin_build_cmd: [dynamic]string
 
@@ -148,10 +152,14 @@ run :: proc() -> int {
 		command = odin_build_cmd[:],
 	}
 	log.infof("Build command: %s", strings.join(odin_build_cmd[:], " "))
+
+	t := time.now()
 	state, stdout, stderr, e := os.process_exec(odin_build_desc, context.allocator)
 	if (state.exit_code > 0) {
 		log.error(string(stdout), string(stderr))
 		return state.exit_code
 	}
+	log.infof("Build successful in: %v\n\n", time.diff(t, time.now()))
+
 	return 0
 }
