@@ -95,7 +95,10 @@ run :: proc() -> int {
 		return 1
 	}
 
-	// compile shaders
+	// =============== Add generic build flags ===============
+	append(&build_flags, "-collection:topdown_game=.")
+
+	// =============== Compile shaders ===============
 	exit_code := compile_shaders()
 	if exit_code != 0 {
 		log.error("Error compiling shaders")

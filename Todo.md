@@ -53,9 +53,8 @@ src/
 - [x] Create a window using sokol
 - [x] write a basic shader and compile it using sokol-shdc
 - [x] Draw a Triangle
-
-- [ ] write a build_scripts/compile_shaders.odin which compiles all the shaders in src/shaders folder and outputs there shader_name.odin file in that folder based on platform specified as argument
-
+- [x] write a build_scripts/compile_shaders.odin which compiles all the shaders in src/shaders folder and outputs there shader_name.odin file in that folder based on platform specified as argument
+- [ ] Create a custom sokol/gfx.Logger instance and attach it to the App instance
 - [ ] Draw rect
 - [ ] Load textures/files in memory
 - [ ] Upload textures/files to GPU
@@ -65,3 +64,9 @@ src/
 - [ ] Audio processing
 - [ ] Tilemap system
 - [ ] Chunk loading
+
+# TODO MISC
+
+- [ ] Make the build script faster
+  - [ ] Make use of multi threading to compile shaders and run odin build parallely (adds around 200ms without multi threading)
+  - [ ] Find an alternative for process_exec() as that does stdout, stderr polling which adds around 200ms
