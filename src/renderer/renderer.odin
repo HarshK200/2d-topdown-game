@@ -1,6 +1,7 @@
 package renderer
 
-import "core:log"
+import "topdown_game:internal/logger"
+import "topdown_game:src/game"
 
 import shaders "topdown_game:src/shaders/gen"
 import sg "topdown_game:third_party/sokol/gfx"
@@ -14,7 +15,7 @@ Renderer :: struct {
 }
 
 init :: proc(renderer: ^Renderer) {
-	log.info("Initializing renderer...")
+	logger.info("Initializing renderer...")
 
 	// setup device sokol sfx environment for platform specific graphics API like DirectX, OpenGL, etc
 	sg.setup({environment = sglue.environment(), logger = {func = slog.func}})
@@ -64,15 +65,20 @@ init :: proc(renderer: ^Renderer) {
 
 }
 
-draw :: proc(renderer: ^Renderer) {
+update :: proc(renderer: ^Renderer, game: ^game.Game2D) {
+	_draw_triangle(renderer, game)
+}
+
+cleanup :: proc(renderer: ^Renderer) {
+	sg.shutdown()
+}
+
+@(private)
+_draw_triangle :: proc(renderer: ^Renderer, game: ^game.Game2D) {
 	sg.begin_pass({action = renderer.pass_action, swapchain = sglue.swapchain()})
 	sg.apply_pipeline(renderer.pipeline)
 	sg.apply_bindings(renderer.bindings)
 	sg.draw(0, 3, 1)
 	sg.end_pass()
 	sg.commit()
-}
-
-cleanup :: proc(renderer: ^Renderer) {
-	sg.shutdown()
 }

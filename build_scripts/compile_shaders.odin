@@ -1,11 +1,11 @@
 package build
 
 import "core:fmt"
-import "core:log"
 import "core:os"
 import "core:path/filepath"
 import "core:strings"
 import "core:time"
+import "topdown_game:internal/logger"
 
 // ./tools/sokol-shdc.exe -i ./src/shaders/triangle.glsl -o ./src/shaders/out/triangle.odin -f sokol_odin --slang hlsl5
 
@@ -18,8 +18,8 @@ compile_shaders :: proc() -> int {
 	// absolute sokol-shdc.exe path
 	sokol_shdc_path, err := os.get_absolute_path(RELATIVE_SOKOL_SHDC_PATH, context.allocator)
 	if err != nil {
-		log.error("Couldn't resolve sokol-shdc.exe absolute path.")
-		log.error(err)
+		logger.error("Couldn't resolve sokol-shdc.exe absolute path.")
+		logger.error(err)
 		return 1
 	}
 
@@ -27,7 +27,7 @@ compile_shaders :: proc() -> int {
 	shader_outdir_path: string
 	shader_outdir_path, err = os.get_absolute_path(RELATIVE_SHADER_OUTDIR_PATH, context.allocator)
 	if err != nil {
-		log.error("Couldn't resolve shader output directory absolute path")
+		logger.error("Couldn't resolve shader output directory absolute path")
 		return 1
 	}
 
@@ -36,8 +36,8 @@ compile_shaders :: proc() -> int {
 	for path, idx in RELATIVE_SHADER_FILES_PATHS {
 		shader_files_paths[idx], err = os.get_absolute_path(path, context.allocator)
 		if err != nil {
-			log.errorf("Unable to resolve the following shader file path:%s", path)
-			log.error(err)
+			logger.errorf("Unable to resolve the following shader file path:%s", path)
+			logger.error(err)
 			return 1
 		}
 	}
@@ -49,8 +49,8 @@ compile_shaders :: proc() -> int {
 		// directory exists: Clean it
 		err = os.remove_all(shader_outdir_path)
 		if err != nil {
-			log.error("Couldn't delete the existing output directory.")
-			log.error(err)
+			logger.error("Couldn't delete the existing output directory.")
+			logger.error(err)
 			return 1
 		}
 	}
@@ -58,13 +58,12 @@ compile_shaders :: proc() -> int {
 	// create fresh shader output directory
 	err = os.make_directory_all(shader_outdir_path) // make directory recursive
 	if err != nil {
-		log.error("Couldn't create fresh output directory.")
-		log.error(err)
+		logger.error("Couldn't create fresh output directory.")
+		logger.error(err)
 		return 1
 	}
 
 	// =============== Creating the compile shaders command ===============
-	log.info("Compiling shaders...")
 
 	// NOTE: sokol-shdc.exe can only compile one shader file at a time
 	for shader_path in shader_files_paths {
@@ -91,16 +90,15 @@ compile_shaders :: proc() -> int {
 		compile_cmd_description: os.Process_Desc = {
 			command = compile_cmd[:],
 		}
-		log.warnf("Shader output target languages are set to: %s", TARGET_COMPILE_LANGUAGES)
-		log.infof("Compile command:\n%s", strings.join(compile_cmd[:], " "))
+		logger.infof("Compile command: %s", strings.join(compile_cmd[:], " "))
 
 		t := time.now()
 		state, stdout, stderr, e := os.process_exec(compile_cmd_description, context.allocator)
 		if (state.exit_code > 0) {
-			log.error(string(stdout), string(stderr))
+			logger.error(string(stdout), string(stderr))
 			return state.exit_code
 		}
-		log.infof("Compiled successfully in: %v\n\n", time.diff(t, time.now()))
+		logger.infof("Shaders compiled successfully in: %v\n", time.diff(t, time.now()))
 	}
 
 	return 0

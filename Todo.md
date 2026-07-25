@@ -17,24 +17,24 @@
 ```
 src/
   main.odin
+  app/
+      app.odin
   game/
       game.odin
-  render/
+    world/
+        world.odin
+        tilemap.odin
+    entities/
+        player.odin
+        enemy.odin
+        bullet.odin
+  renderer/
       renderer.odin
       sprite_renderer.odin
       texture.odin
-  world/
-      world.odin
-      tilemap.odin
-  entities/
-      player.odin
-      enemy.odin
-      bullet.odin
   assets/
       loader.odin
       atlas.odin
-  math/
-      camera.odin
   input/
       input.odin
 ```

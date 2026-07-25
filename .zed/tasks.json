@@ -4,7 +4,7 @@
   // debug build task with odin.build
   {
     "label": "build-debug-win32",
-    "command": "odin run ./build_scripts -out:./build_scripts/build.exe -- --debug",
+    "command": "odin run ./build_scripts -collection:topdown_game=.  -out:./build_scripts/build.exe -- --debug",
     //"args": [],
     // Env overrides for the command, will be appended to the terminal's environment from the settings.
     // "env": { "foo": "bar" },
@@ -28,7 +28,7 @@
   // release build task with odin.build
   {
     "label": "build-release-win32",
-    "command": "odin run ./build_scripts -out:./build_scripts/build.exe -- --release",
+    "command": "odin run ./build_scripts -collection:topdown_game=.  -out:./build_scripts/build.exe -- --release",
     //"args": [],
     // Env overrides for the command, will be appended to the terminal's environment from the settings.
     // "env": { "foo": "bar" },
@@ -52,7 +52,7 @@
   // build and run release task using odin.build
   {
     "label": "build-run-release-win32",
-    "command": "odin run ./build_scripts -out:./build_scripts/build.exe -- --release && build\\release\\main.exe",
+    "command": "odin run ./build_scripts -collection:topdown_game=.  -out:./build_scripts/build.exe -- --release && build\\release\\main.exe",
     //"args": [],
     // Env overrides for the command, will be appended to the terminal's environment from the settings.
     // "env": { "foo": "bar" },
@@ -75,7 +75,7 @@
 
   {
     "label": "build-run-debug-win32",
-    "command": "odin run ./build_scripts -out:./build_scripts/build.exe -- --debug && .\\build\\debug\\main.exe",
+    "command": "odin run ./build_scripts -collection:topdown_game=. -out:./build_scripts/build.exe -- --debug && .\\build\\debug\\main.exe",
     //"args": [],
     // Env overrides for the command, will be appended to the terminal's environment from the settings.
     // "env": { "foo": "bar" },
@@ -98,7 +98,7 @@
 
   {
     "label": "compile-shaders",
-    "command": "odin run ./build_scripts -out:./build_scripts/build.exe -- --shader-only",
+    "command": "odin run ./build_scripts -collection:topdown_game=. -out:./build_scripts/build.exe -- --shader-only",
     //"args": [],
     // Env overrides for the command, will be appended to the terminal's environment from the settings.
     // "env": { "foo": "bar" },
