@@ -83,11 +83,14 @@ _get_caller_base_loc :: proc(location := #caller_location) -> string {
 
 // ===================== DEBUG =====================
 
+// NOTE: make sure you have called init() to configure logger
 debug :: proc(text: string, location := #caller_location) {
 	if (Level.Debug < _config.Minimum_Level) {return}
 
 	_log("[DEBUG]", Debug_Color, location, true, text)
 }
+
+// NOTE: make sure you have called init() to configure logger
 debugf :: proc(format_str: string, args: ..any, location := #caller_location) {
 	debug(fmt.tprintf(format_str, ..args), location)
 }
@@ -95,11 +98,14 @@ debugf :: proc(format_str: string, args: ..any, location := #caller_location) {
 
 // ===================== INFO =====================
 
+// NOTE: make sure you have called init() to configure logger
 info :: proc(text: string, location := #caller_location) {
 	if (Level.Info < _config.Minimum_Level) {return}
 
 	_log("[INFO ]", Info_Color, location, false, text)
 }
+
+// NOTE: make sure you have called init() to configure logger
 infof :: proc(format_str: string, args: ..any, location := #caller_location) {
 	info(fmt.tprintf(format_str, ..args), location)
 }
@@ -107,11 +113,14 @@ infof :: proc(format_str: string, args: ..any, location := #caller_location) {
 
 // ===================== WARN =====================
 
+// NOTE: make sure you have called init() to configure logger
 warn :: proc(text: string, location := #caller_location) {
 	if (Level.Warn < _config.Minimum_Level) {return}
 
 	_log("[WARN ]", Warn_Color, location, true, text)
 }
+
+// NOTE: make sure you have called init() to configure logger
 warnf :: proc(format_str: string, args: ..any, location := #caller_location) {
 	warn(fmt.tprintf(format_str, ..args), location)
 }
@@ -119,6 +128,7 @@ warnf :: proc(format_str: string, args: ..any, location := #caller_location) {
 
 // ===================== ERROR =====================
 
+// NOTE: make sure you have called init() to configure logger
 error :: proc {
 	error_str,
 	error_err,
@@ -135,6 +145,8 @@ error_err :: proc(err: ..any, location := #caller_location) {
 
 	_log(" [ERROR]", Error_Color, location, true, fmt.aprint(..err, sep = " "))
 }
+
+// NOTE: make sure you have called init() to configure logger
 errorf :: proc(format_str: string, args: ..any, location := #caller_location) {
 	error(fmt.tprintf(format_str, ..args), location)
 }

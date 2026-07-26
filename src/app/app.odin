@@ -38,6 +38,7 @@ run :: proc() {
 		{
 			init_cb = _init_cb,
 			frame_cb = _frame_cb,
+			event_cb = _input_cb,
 			cleanup_cb = _cleanup_cb,
 			width = 800,
 			height = 600,
@@ -63,6 +64,11 @@ _frame_cb :: proc "c" () {
 
 	game.update(&APP.Game)
 	renderer.update(&APP.Renderer, &APP.Game)
+}
+
+@(private)
+_input_cb :: proc "c" (event: ^sapp.Event) {
+	context = APP.Context
 }
 
 @(private)

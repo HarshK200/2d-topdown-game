@@ -11,7 +11,7 @@ import "topdown_game:internal/logger"
 
 RELATIVE_SOKOL_SHDC_PATH :: "./tools/sokol-shdc.exe"
 RELATIVE_SHADER_OUTDIR_PATH :: "./src/shaders/gen"
-RELATIVE_SHADER_FILES_PATHS :: [?]string{"./src/shaders/triangle.glsl"}
+RELATIVE_SHADER_FILES_PATHS :: [?]string{"./src/shaders/main.glsl"}
 TARGET_COMPILE_LANGUAGES :: "hlsl5"
 
 compile_shaders :: proc() -> int {

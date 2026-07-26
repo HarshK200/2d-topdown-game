@@ -1,3 +1,9 @@
+# DOING:
+- [ ] make a rect move around
+  - [ ] Draw a rect *use index buffer*
+  - [ ] Create input controller and handle input *use sokol's sapp input callback input*
+  - [ ] Make the rect move
+
 # GAME DESIGN
 
 - TERRARIA INSPIRED BY TOP-DOWN
@@ -54,7 +60,7 @@ src/
 - [x] write a basic shader and compile it using sokol-shdc
 - [x] Draw a Triangle
 - [x] write a build_scripts/compile_shaders.odin which compiles all the shaders in src/shaders folder and outputs there shader_name.odin file in that folder based on platform specified as argument
-- [ ] Create a custom sokol/gfx.Logger instance and attach it to the App instance
+- [x] Simple custom logger package
 - [ ] Draw rect
 - [ ] Load textures/files in memory
 - [ ] Upload textures/files to GPU
