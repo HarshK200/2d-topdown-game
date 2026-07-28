@@ -6,3 +6,27 @@
 - **Prefer explicit code over generic abstractions.**
 - **Introduce a new subsystem only when it has a distinct responsibility (renderer, app, game, assets), not because a pattern says it should exist.**
 - **If a function is only ever used by this game, it's perfectly fine for it to be specific to this game.**
+
+# How vertex transforms work:
+
+Local Mesh
+↓
+(Model Matrix)
+↓
+World
+↓
+(View Matrix)
+↓
+Camera Space
+↓
+(Orthographic Projection)
+↓
+Clip Space
+↓
+(GPU automatically performs perspective divide)
+↓
+NDC
+↓
+Viewport
+↓
+Pixels

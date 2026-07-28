@@ -1,6 +1,6 @@
 # DOING:
 - [ ] make a rect move around
-  - [ ] Draw a rect *use index buffer*
+  - [x] Draw a rect *use index buffer*
   - [ ] Create input controller and handle input *use sokol's sapp input callback input*
   - [ ] Make the rect move
 
@@ -61,7 +61,7 @@ src/
 - [x] Draw a Triangle
 - [x] write a build_scripts/compile_shaders.odin which compiles all the shaders in src/shaders folder and outputs there shader_name.odin file in that folder based on platform specified as argument
 - [x] Simple custom logger package
-- [ ] Draw rect
+- [x] Draw rect
 - [ ] Load textures/files in memory
 - [ ] Upload textures/files to GPU
 - [ ] how to draw texture on drawn rect, figure out shaders

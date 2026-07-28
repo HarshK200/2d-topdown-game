@@ -1,5 +1,6 @@
 package renderer
 
+import math "topdown_game:internal/game_math"
 import "topdown_game:internal/logger"
 import "topdown_game:src/game"
 
@@ -9,10 +10,12 @@ import sglue "topdown_game:third_party/sokol/glue"
 import slog "topdown_game:third_party/sokol/log"
 
 Renderer :: struct {
-	pipeline:      sg.Pipeline,
-	pass_action:   sg.Pass_Action,
-	triangle_mesh: Mesh2D,
-	quad_mesh:     Mesh2D,
+	default_pipeline:    sg.Pipeline,
+	default_pass_action: sg.Pass_Action,
+
+	// premitive 2d meshs
+	triangle_mesh:       Mesh2D,
+	quad_mesh:           Mesh2D,
 }
 
 init :: proc(renderer: ^Renderer) {
@@ -21,22 +24,23 @@ init :: proc(renderer: ^Renderer) {
 	// setup device sokol sfx environment for platform specific graphics API like DirectX, OpenGL, etc
 	sg.setup({environment = sglue.environment(), logger = {func = slog.func}})
 	// pass action to clear framebuffer to black
-	renderer.pass_action = {
+	renderer.default_pass_action = {
 		colors = {0 = {load_action = .CLEAR, clear_value = {r = 0.0, g = 0.0, b = 0.0, a = 1.0}}},
 	}
 	// compile shaders
-	main_shader := sg.make_shader(shaders.main_shader_desc(sg.query_backend()))
+	main_shader := sg.make_shader(shaders.default_shader_desc(sg.query_backend()))
 	// make pipeline (for index buffer)
-	renderer.pipeline = sg.make_pipeline(
+	renderer.default_pipeline = sg.make_pipeline(
 		{
 			shader = main_shader,
-			index_type = .UINT16,
 			layout = {
 				attrs = {
-					shaders.ATTR_main_position = {format = .FLOAT3},
-					shaders.ATTR_main_albedo0 = {format = .FLOAT4},
+					shaders.ATTR_default_position = {format = .FLOAT3},
+					shaders.ATTR_default_albedo0 = {format = .FLOAT4},
 				},
 			},
+			index_type = .UINT16,
+			cull_mode = .BACK,
 		},
 	)
 
@@ -47,11 +51,18 @@ init :: proc(renderer: ^Renderer) {
 }
 
 update :: proc(renderer: ^Renderer, game: ^game.Game2D) {
-	sg.begin_pass({action = renderer.pass_action, swapchain = sglue.swapchain()})
-	sg.apply_pipeline(renderer.pipeline)
+	sg.begin_pass({action = renderer.default_pass_action, swapchain = sglue.swapchain()})
+	sg.apply_pipeline(renderer.default_pipeline)
 
-	_draw_mesh(&renderer.quad_mesh, 1)
-	_draw_mesh(&renderer.triangle_mesh, 1)
+	// set per frame
+	frame_params := shaders.Frame_Params {
+		VIEW       = math.identity_mat4(),
+		PROJECTION = math.identity_mat4(),
+	}
+	sg.apply_uniforms(shaders.UB_frame_params, {ptr = &frame_params, size = size_of(frame_params)})
+
+
+	draw_player(renderer)
 
 	sg.end_pass()
 	sg.commit()

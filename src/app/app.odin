@@ -1,7 +1,8 @@
 package app
 
 import "base:runtime"
-import "core:log"
+import "core:mem"
+import "core:mem/virtual"
 import "topdown_game:internal/logger"
 
 import "topdown_game:src/game"
@@ -10,9 +11,10 @@ import sapp "topdown_game:third_party/sokol/app"
 import slog "topdown_game:third_party/sokol/log"
 
 App :: struct {
-	Game:     game.Game2D,
-	Renderer: renderer.Renderer,
-	Context:  runtime.Context,
+	Game:        game.Game2D,
+	Renderer:    renderer.Renderer,
+	Context:     runtime.Context,
+	Frame_Arena: virtual.Arena,
 }
 
 // The global instance of app, which is used when app.run() is called
@@ -26,6 +28,11 @@ APP: App
 // NOTE: this function MUST be called before calling run
 init :: proc() {
 	APP.Context = runtime.default_context()
+	context = APP.Context
+	alloc_err := virtual.arena_init_growing(&APP.Frame_Arena, 1 * mem.Megabyte)
+	if alloc_err != nil {
+		panic("Failed to initialize frame arena")
+	}
 }
 
 // Calls sapp.run with _init, _frame and _cleanup callbacks
@@ -61,6 +68,8 @@ _init_cb :: proc "c" () {
 @(private)
 _frame_cb :: proc "c" () {
 	context = APP.Context
+	virtual.arena_free_all(&APP.Frame_Arena)
+	context.allocator = virtual.arena_allocator(&APP.Frame_Arena)
 
 	game.update(&APP.Game)
 	renderer.update(&APP.Renderer, &APP.Game)
@@ -77,4 +86,5 @@ _cleanup_cb :: proc "c" () {
 
 	game.cleanup(&APP.Game)
 	renderer.cleanup(&APP.Renderer)
+	virtual.arena_destroy(&APP.Frame_Arena)
 }
