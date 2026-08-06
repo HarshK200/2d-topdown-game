@@ -1,10 +1,10 @@
 package renderer
 
-import math "topdown_game:internal/game_math"
+import gmath "topdown_game:internal/game_math"
 import "topdown_game:internal/logger"
-import "topdown_game:src/game"
+import game "topdown_game:src/game"
 
-import shaders "topdown_game:src/shaders/gen"
+import shaders "topdown_game:src/shaders/build"
 import sg "topdown_game:third_party/sokol/gfx"
 import sglue "topdown_game:third_party/sokol/glue"
 import slog "topdown_game:third_party/sokol/log"
@@ -27,12 +27,14 @@ init :: proc(renderer: ^Renderer) {
 	renderer.default_pass_action = {
 		colors = {0 = {load_action = .CLEAR, clear_value = {r = 0.0, g = 0.0, b = 0.0, a = 1.0}}},
 	}
+
 	// compile shaders
-	main_shader := sg.make_shader(shaders.default_shader_desc(sg.query_backend()))
+	default_shader := sg.make_shader(shaders.default_shader_desc(sg.query_backend()))
+
 	// make pipeline (for index buffer)
 	renderer.default_pipeline = sg.make_pipeline(
 		{
-			shader = main_shader,
+			shader = default_shader,
 			layout = {
 				attrs = {
 					shaders.ATTR_default_position = {format = .FLOAT3},
@@ -50,14 +52,16 @@ init :: proc(renderer: ^Renderer) {
 	renderer.quad_mesh = _make_quad_mesh()
 }
 
-update :: proc(renderer: ^Renderer, game: ^game.Game2D) {
+update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 	sg.begin_pass({action = renderer.default_pass_action, swapchain = sglue.swapchain()})
 	sg.apply_pipeline(renderer.default_pipeline)
 
-	// set per frame
+
+	// uniforms set per frame
+	// TODO: make these view and projection matrix. NOTE: view matrix comes from camera.lookat and camera2D
 	frame_params := shaders.Frame_Params {
-		VIEW       = math.identity_mat4(),
-		PROJECTION = math.identity_mat4(),
+		VIEW       = game.view_matrix_from_camera2d(&g.camera),
+		PROJECTION = gmath.identity_mat4(),
 	}
 	sg.apply_uniforms(shaders.UB_frame_params, {ptr = &frame_params, size = size_of(frame_params)})
 

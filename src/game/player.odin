@@ -13,6 +13,3 @@ init_player :: proc(game: ^Game2D) {
 	game.player.position = {1.0, 1.0}
 	game.player.scale = {1.0, 1.0}
 }
-
-update_player :: proc(game: ^Game2D) {
-}

@@ -1,0 +1,22 @@
+[
+    {
+        "label": "build-debug-win32",
+        "cmd": "odin run ./build_scripts -collection:topdown_game=. -out:./build_scripts/build.exe -- --debug"
+    },
+    {
+        "label": "build-run-debug-win32",
+        "cmd": "odin run ./build_scripts -collection:topdown_game=. -out:./build_scripts/build.exe -- --debug && .\\build\\debug\\main.exe"
+    },
+    {
+        "label": "build-release-win32",
+        "cmd": "odin run ./build_scripts -collection:topdown_game=.  -out:./build_scripts/build.exe -- --release"
+    },
+    {
+        "label": "build-run-release-win32",
+        "cmd": "odin run ./build_scripts -collection:topdown_game=.  -out:./build_scripts/build.exe -- --release && build\\release\\main.exe"
+    },
+    {
+        "label": "compile-shaders",
+        "cmd": "odin run ./build_scripts -collection:topdown_game=. -out:./build_scripts/build.exe -- --shader-only"
+    }
+]

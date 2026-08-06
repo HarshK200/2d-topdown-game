@@ -1,11 +1,11 @@
 package renderer
 
-import math "topdown_game:internal/game_math"
-import shaders "topdown_game:src/shaders/gen"
+import gmath "topdown_game:internal/game_math"
+import shaders "topdown_game:src/shaders/build"
 import sg "topdown_game:third_party/sokol/gfx"
 
 draw_player :: proc(renderer: ^Renderer) {
-	model := math.translate_mat4({0.0, 0.0, 0.0}) * math.scale_mat4({0.5, 0.5, 1.0})
+	model := gmath.translate_mat4({0.0, 0.4, 0.0}) * gmath.scale_mat4({0.5, 0.5, 1.0})
 
 	entity_params := shaders.Entity_Params {
 		MODEL = model,

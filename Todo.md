@@ -4,6 +4,19 @@
   - [ ] Create input controller and handle input *use sokol's sapp input callback input*
   - [ ] Make the rect move
 
+# TEST:
+- [ ] Maybe make the following directory structure for renderer:
+    renderer/
+        mesh/
+            mesh2d.odin
+            triagnle_mesh.odin
+            quad_mesh.odin
+        draw/
+            player.odin
+            trees.odin
+            etc...
+        renderer.odin
+
 # GAME DESIGN
 
 - TERRARIA INSPIRED BY TOP-DOWN

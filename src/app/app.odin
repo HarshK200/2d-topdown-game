@@ -78,6 +78,8 @@ _frame_cb :: proc "c" () {
 @(private)
 _input_cb :: proc "c" (event: ^sapp.Event) {
 	context = APP.Context
+
+    // TODO create input manager
 }
 
 @(private)

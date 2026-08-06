@@ -4,7 +4,7 @@
   // debug build task with odin.build
   {
     "label": "build-debug-win32",
-    "command": "odin run ./build_scripts -collection:topdown_game=.  -out:./build_scripts/build.exe -- --debug",
+    "command": "odin run ./build_scripts -collection:topdown_game=. -out:./build_scripts/build.exe -- --debug",
     //"args": [],
     // Env overrides for the command, will be appended to the terminal's environment from the settings.
     // "env": { "foo": "bar" },
