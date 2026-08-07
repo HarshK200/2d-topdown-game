@@ -11,5 +11,5 @@ Player :: struct {
 
 init_player :: proc(game: ^Game2D) {
 	game.player.position = {100.0, 100.0}
-	game.player.scale = {32, 64}
+	game.player.scale = {32, 48}
 }

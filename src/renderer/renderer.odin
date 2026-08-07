@@ -12,6 +12,7 @@ import slog "topdown_game:third_party/sokol/log"
 Renderer :: struct {
 	default_pipeline:    sg.Pipeline,
 	default_pass_action: sg.Pass_Action,
+	internal_resolution: [2]f32,
 
 	// premitive 2d meshs
 	triangle_mesh:       Mesh2D,
@@ -20,6 +21,7 @@ Renderer :: struct {
 
 init :: proc(renderer: ^Renderer) {
 	logger.info("Initializing renderer...")
+	renderer.internal_resolution = {640, 360}
 
 	// setup device sokol sfx environment for platform specific graphics API like DirectX, OpenGL, etc
 	sg.setup({environment = sglue.environment(), logger = {func = slog.func}})
@@ -62,8 +64,14 @@ update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 	// TODO: make these view and projection matrix. NOTE: view matrix comes from camera.lookat and camera2D
 	frame_params := shaders.Frame_Params {
 		VIEW       = game.view_matrix_from_camera2d(&g.camera),
-		PROJECTION = gmath.Orthographic_Mat4(0, 480, 270, 0, g.camera.near, g.camera.far),
-		// PROJECTION = gmath.Identity_Mat4(),
+		PROJECTION = gmath.Orthographic_Mat4(
+			0,
+			renderer.internal_resolution.x,
+			renderer.internal_resolution.y,
+			0,
+			g.camera.near,
+			g.camera.far,
+		),
 	}
 	sg.apply_uniforms(shaders.UB_frame_params, {ptr = &frame_params, size = size_of(frame_params)})
 

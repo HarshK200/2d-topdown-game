@@ -1,8 +1,15 @@
 # DOING:
 - [ ] make a rect move around
   - [x] Draw a rect *use index buffer*
+  - [x] Finish projection matrix *orthogonal*
+  - [x] Decide player size, internal-resolution and test-screen-resolution
+    - **32x48 player size**
+    - **640x360 internal render resolution**
+    - **1920x1080 testing screen resolution**
+  - [ ] Create asset manager to handle texture file loading
+  - [ ] Sample texture onto player's quad_mesh
   - [ ] Create input controller and handle input *use sokol's sapp input callback input*
-  - [ ] Make the rect move
+  - [ ] Make the rect move with realtime input
 
 # TEST:
 - [ ] Maybe make the following directory structure for renderer:

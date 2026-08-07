@@ -10,8 +10,8 @@ import "topdown_game:src/renderer"
 import sapp "topdown_game:third_party/sokol/app"
 import slog "topdown_game:third_party/sokol/log"
 
-WIDTH :: 480
-HEIGHT :: 270
+WIDTH :: 1920
+HEIGHT :: 1080
 App :: struct {
 	Game:        game.Game2D,
 	Renderer:    renderer.Renderer,
@@ -51,7 +51,7 @@ run :: proc() {
 			cleanup_cb = _cleanup_cb,
 			width = WIDTH,
 			height = HEIGHT,
-			fullscreen = false,
+			fullscreen = true,
 			window_title = "2d-topdown-game",
 			icon = {sokol_default = true},
 			logger = {func = slog.func},
