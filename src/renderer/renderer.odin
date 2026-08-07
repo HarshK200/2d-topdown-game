@@ -23,6 +23,8 @@ init :: proc(renderer: ^Renderer) {
 
 	// setup device sokol sfx environment for platform specific graphics API like DirectX, OpenGL, etc
 	sg.setup({environment = sglue.environment(), logger = {func = slog.func}})
+	logger.infof("Backend: %v", sg.query_backend())
+
 	// pass action to clear framebuffer to black
 	renderer.default_pass_action = {
 		colors = {0 = {load_action = .CLEAR, clear_value = {r = 0.0, g = 0.0, b = 0.0, a = 1.0}}},
@@ -42,7 +44,7 @@ init :: proc(renderer: ^Renderer) {
 				},
 			},
 			index_type = .UINT16,
-			cull_mode = .BACK,
+			cull_mode = .NONE,
 		},
 	)
 
@@ -56,17 +58,17 @@ update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 	sg.begin_pass({action = renderer.default_pass_action, swapchain = sglue.swapchain()})
 	sg.apply_pipeline(renderer.default_pipeline)
 
-
 	// uniforms set per frame
 	// TODO: make these view and projection matrix. NOTE: view matrix comes from camera.lookat and camera2D
 	frame_params := shaders.Frame_Params {
 		VIEW       = game.view_matrix_from_camera2d(&g.camera),
-		PROJECTION = gmath.identity_mat4(),
+		PROJECTION = gmath.Orthographic_Mat4(0, 480, 270, 0, g.camera.near, g.camera.far),
+		// PROJECTION = gmath.Identity_Mat4(),
 	}
 	sg.apply_uniforms(shaders.UB_frame_params, {ptr = &frame_params, size = size_of(frame_params)})
 
 
-	draw_player(renderer)
+	draw_player(renderer, g)
 
 	sg.end_pass()
 	sg.commit()

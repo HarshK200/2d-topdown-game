@@ -14,7 +14,7 @@ visualized:
 [ 0  0  1  0 ]
 [ 0  0  0  1 ]
 */
-identity_mat4 :: proc() -> mat4 {
+Identity_Mat4 :: proc() -> mat4 {
 	m: mat4 = {}
 	m[0, 0] = 1.0
 	m[1, 1] = 1.0
@@ -31,8 +31,8 @@ visualized:
 [ 0   0   S3  0 ]
 [ 0   0   0   1 ]
 */
-scale_mat4 :: proc(scale: vec3) -> mat4 {
-	m := identity_mat4()
+Scale_Mat4 :: proc(scale: vec3) -> mat4 {
+	m := Identity_Mat4()
 	m[0].x = scale.x
 	m[1].y = scale.y
 	m[2].z = scale.z
@@ -47,8 +47,8 @@ visualized:
 [ 0  0  0  Tz ]
 [ 0  0  0   1 ]
 */
-translate_mat4 :: proc(translation: vec3) -> mat4 {
-	m := identity_mat4()
+Translate_Mat4 :: proc(translation: vec3) -> mat4 {
+	m := Identity_Mat4()
 	m[3].xyz = translation
 	return m
 }
@@ -56,3 +56,68 @@ translate_mat4 :: proc(translation: vec3) -> mat4 {
 // learn quaternions for rotation
 //
 // rotation_mat4
+
+
+/*
+   returns a 4x4 right handed orthographic projection matrix based on os,
+   DirectX convention for windows and OpenGL convention for linux
+*/
+Orthographic_Mat4 :: proc(left, right, bottom, top, near, far: f32) -> mat4 {
+	switch {
+	case ODIN_OS == .Windows:
+		return _Orthographic_Mat4_RH_ZO(left, right, bottom, top, near, far)
+
+	case ODIN_OS == .Linux:
+		return _Orthographic_Mat4_RH_NO(left, right, bottom, top, near, far)
+	case:
+		panic("Unsupported platform")
+	}
+}
+
+/* retuns a 4x4 right handed orthographic projection matrix with Z ranging from -1 to 1 (OpenGL convention)
+   Left, Right, Bottom, Top specify the coordinate of there respective clipping space
+
+visualized:
+[ 2.0/width     0           0               -1 ]
+[   0       2.0/height      0               -1 ]
+[   0           0       2.0/(near - far)    z* ]        z* = (near + far) / (near - far)
+[   0           0           0                1 ]
+*/
+@(private)
+_Orthographic_Mat4_RH_NO :: proc(left, right, bottom, top, near, far: f32) -> mat4 {
+	m := Identity_Mat4()
+
+	m[0, 0] = 2.0 / (right - left)
+	m[1, 1] = 2.0 / (top - bottom)
+	m[2, 2] = 2.0 / (near - far)
+
+	m[3].x = (left + right) / (left - right)
+	m[3].y = (bottom + top) / (bottom - top)
+	m[3].z = (near + far) / (near - far)
+
+	return m
+}
+
+/* retuns a 4x4 right handed orthographic projection matrix with Z ranging from 0 to 1 (DirectX/vulkan convention)
+   Left, Right, Bottom, Top specify the coordinate of there respective clipping space
+
+visualized:
+[ 2.0/width     0           0               -1 ]
+[   0       2.0/height      0               -1 ]
+[   0           0       1.0/(near - far)    z* ]        z* = (near) / (near - far)
+[   0           0           0                1 ]
+*/
+@(private)
+_Orthographic_Mat4_RH_ZO :: proc(left, right, bottom, top, near, far: f32) -> mat4 {
+	m := Identity_Mat4()
+
+	m[0, 0] = 2.0 / (right - left)
+	m[1, 1] = 2.0 / (top - bottom)
+	m[2, 2] = 1.0 / (near - far)
+
+	m[3].x = (left + right) / (left - right)
+	m[3].y = (bottom + top) / (bottom - top)
+	m[3].z = (near) / (near - far)
+
+	return m
+}

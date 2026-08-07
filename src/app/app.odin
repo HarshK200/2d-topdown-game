@@ -10,6 +10,8 @@ import "topdown_game:src/renderer"
 import sapp "topdown_game:third_party/sokol/app"
 import slog "topdown_game:third_party/sokol/log"
 
+WIDTH :: 480
+HEIGHT :: 270
 App :: struct {
 	Game:        game.Game2D,
 	Renderer:    renderer.Renderer,
@@ -47,8 +49,8 @@ run :: proc() {
 			frame_cb = _frame_cb,
 			event_cb = _input_cb,
 			cleanup_cb = _cleanup_cb,
-			width = 800,
-			height = 600,
+			width = WIDTH,
+			height = HEIGHT,
 			fullscreen = false,
 			window_title = "2d-topdown-game",
 			icon = {sokol_default = true},
@@ -79,7 +81,7 @@ _frame_cb :: proc "c" () {
 _input_cb :: proc "c" (event: ^sapp.Event) {
 	context = APP.Context
 
-    // TODO create input manager
+	// TODO create input manager
 }
 
 @(private)
