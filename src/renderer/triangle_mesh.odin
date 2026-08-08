@@ -9,7 +9,7 @@ _make_triangle_mesh :: proc() -> Mesh2D {
 	// odinfmt: disable
 	// triangle vertices
 	vertices := [?]f32 {
-		// position			// color
+		// position			// albedo
 		 0.0,  0.5, 0.0,	1.0, 1.0, 1.0, 1.0,
 		 0.5, -0.5, 0.0,	0.0, 1.0, 1.0, 1.0,
 		-0.5, -0.5, 0.0,	1.0, 0.0, 1.0, 1.0,
@@ -20,7 +20,7 @@ _make_triangle_mesh :: proc() -> Mesh2D {
 	// odinfmt: enable
 
 	triangle_mesh.base_element = 0
-	triangle_mesh.num_elements = 3
+	triangle_mesh.num_elements = len(indices)
 	triangle_mesh.bindings.vertex_buffers[0] = sg.make_buffer(
 		{
 			label = "Triangle Vertex Buffer",

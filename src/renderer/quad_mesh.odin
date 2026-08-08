@@ -5,11 +5,11 @@ import sg "topdown_game:third_party/sokol/gfx"
 @(private)
 _make_quad_mesh :: proc() -> Mesh2D {
 	quad_mesh: Mesh2D
-
+	
 	// odinfmt: disable
 	// quad vertex buffer
 	vertices := [?]f32{
-		// position			// colors
+		// position			    // albedo
 		-0.5,  0.5, 0.0,		1.0, 0.0, 0.0, 1.0,
 		 0.5,  0.5, 0.0,		0.0, 1.0, 0.0, 1.0,
 		 0.5, -0.5, 0.0,		0.0, 0.0, 1.0, 1.0,
@@ -22,7 +22,7 @@ _make_quad_mesh :: proc() -> Mesh2D {
 	// odinfmt: enable
 
 	quad_mesh.base_element = 0
-	quad_mesh.num_elements = 6
+	quad_mesh.num_elements = len(indices)
 	quad_mesh.bindings.vertex_buffers[0] = sg.make_buffer(
 		{
 			label = "Quad Vertex Buffer",

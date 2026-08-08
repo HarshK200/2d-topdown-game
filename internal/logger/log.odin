@@ -128,7 +128,11 @@ warnf :: proc(format_str: string, args: ..any, location := #caller_location) {
 
 // ===================== ERROR =====================
 
-// NOTE: make sure you have called init() to configure logger
+/*
+    Prints the error and PANICS
+
+    NOTE: make sure you have called init() to configure logger
+*/
 error :: proc {
 	error_str,
 	error_err,
@@ -138,15 +142,21 @@ error_str :: proc(text: string, location := #caller_location) {
 	if (Level.Error < _config.Minimum_Level) {return}
 
 	_log("[ERROR]", Error_Color, location, true, text)
+	panic("", loc = location)
 }
 @(private)
 error_err :: proc(err: ..any, location := #caller_location) {
 	if (Level.Error < _config.Minimum_Level) {return}
 
-	_log(" [ERROR]", Error_Color, location, true, fmt.aprint(..err, sep = " "))
+	_log(" [ERROR]", Error_Color, location, true, fmt.tprint(..err, sep = " "))
+	panic("", loc = location)
 }
 
-// NOTE: make sure you have called init() to configure logger
+/*
+    Prints the error and PANICS
+
+    NOTE: make sure you have called init() to configure logger
+*/
 errorf :: proc(format_str: string, args: ..any, location := #caller_location) {
-	error(fmt.tprintf(format_str, ..args), location)
+	error(fmt.tprintf(format_str, ..args), location = location)
 }

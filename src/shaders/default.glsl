@@ -4,6 +4,7 @@
 
 @ctype mat4 math.mat4
 
+
 @vs vs
 layout(binding=0) uniform frame_params {
     mat4 VIEW;
@@ -15,21 +16,31 @@ layout(binding=1) uniform entity_params {
 
 in vec3 position;
 in vec4 albedo0;
+in vec2 texcoord0;
 
 out vec4 albedo;
+out vec2 uv;
 
 void main() {
     gl_Position = PROJECTION * VIEW * MODEL * vec4(position, 1.0);
+
     albedo = albedo0;
+    uv = texcoord0;
 }
 @end
 
+
 @fs fs
+layout(binding=0) uniform texture2D tex;
+layout(binding=0) uniform sampler smp;
+
 in vec4 albedo;
+in vec2 uv;
 
 out vec4 out_color;
 
 void main() {
+    vec4 tex_color = texture(sampler2D(tex, smp), uv);
     out_color = albedo;
 }
 @end
