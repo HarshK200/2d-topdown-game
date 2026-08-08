@@ -10,9 +10,9 @@ import sglue "topdown_game:third_party/sokol/glue"
 import slog "topdown_game:third_party/sokol/log"
 
 Renderer :: struct {
+	internal_resolution: [2]f32,
 	default_pipeline:    sg.Pipeline,
 	default_pass_action: sg.Pass_Action,
-	internal_resolution: [2]f32,
 
 	// premitive 2d meshs
 	triangle_mesh:       Mesh2D,

@@ -6,6 +6,7 @@
     - **32x48 player size**
     - **640x360 internal render resolution**
     - **1920x1080 testing screen resolution**
+  - [x] Created Arena for game memory and using temp allocator for per frame allocations
   - [ ] Create asset manager to handle texture file loading
   - [ ] Sample texture onto player's quad_mesh
   - [ ] Create input controller and handle input *use sokol's sapp input callback input*
