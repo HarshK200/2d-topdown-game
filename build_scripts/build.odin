@@ -45,20 +45,31 @@ run :: proc() -> int {
 	shader_out_path: string
 
 	build_mode: string
+	graphics_backend: string
 	build_flags: [dynamic]string
 
 	// =============== Parse input arguments ===============
 
 	err: os.Error
 
+	// NOTE: the first argument is always the file or directory you wanna execute
 	// second argument is the build_mode e.g. --debug
 	if len(os.args) < 2 {
-		logger.error("No build_mode specified.\navailable options are:\n\t--debug\n\t--release")
+		logger.error(
+			"No build_mode specified.\navailable options are:\n\t--debug\n\t--release\n\t--shader-only",
+		)
 		return 1
 	}
 	build_mode = os.args[1]
+	if (len(os.args) < 3 && build_mode != "--shader-only") {
+		logger.error(
+			"No graphics api backend specified.\navailable options are:\nOn Windows:\t--d3d11,--opengl\n*no other platform build supported yet*",
+		)
+		return 1
+	}
+	graphics_backend = os.args[2]
 
-	// =============== Setup odin build mode and arguments ===============
+	// =============== Setup odin build mode and api backend ===============
 	switch {
 	case build_mode == "--debug":
 		outdir_path, err = os.get_absolute_path(RELATIVE_DEBUG_PATH, context.allocator)
@@ -92,6 +103,16 @@ run :: proc() -> int {
 	if err != nil {
 		logger.error("Couldn't resolve project directory absolute path")
 		return 1
+	}
+
+	switch {
+	case graphics_backend == "--opengl":
+        // BUG: GL backend on windows breaks, just use d3d11 *trust me i tried to get opengl running on windows*
+		// append(&build_flags, "-define:SOKOL_USE_GL=true")
+        break
+
+	case graphics_backend == "--d3d11":
+        break
 	}
 
 	// =============== Add generic build flags ===============

@@ -12,7 +12,7 @@ import "topdown_game:internal/logger"
 RELATIVE_SOKOL_SHDC_PATH :: "./tools/sokol-shdc.exe"
 RELATIVE_SHADER_OUTDIR_PATH :: "./src/shaders/build"
 RELATIVE_SHADER_FILES_PATHS :: [?]string{"./src/shaders/default.glsl"}
-TARGET_COMPILE_LANGUAGES :: "hlsl5"
+TARGET_COMPILE_LANGUAGES :: "hlsl5" // for d3d11
 
 compile_shaders :: proc() -> int {
 	// absolute sokol-shdc.exe path

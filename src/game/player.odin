@@ -4,7 +4,7 @@ import math "topdown_game:internal/game_math"
 
 Player :: struct {
 	position: math.vec2,
-	scale:    math.vec2,
+	scale:    math.vec2, // 1 unit = 1 pixel
 	sprite:   Sprite2D,
 
 	// TODO: rotation
@@ -15,7 +15,7 @@ init_player :: proc(game: ^Game2D) {
 	game.player.scale = {32, 48}
 
 	game.player.sprite = {
-		texture_id = .PLAYER_SPRITE,
-		uv_min     = {0, 0},
+		texture_id   = .PLAYER_SPRITE,
+		texel_coords = {0, 0},
 	}
 }

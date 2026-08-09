@@ -7,12 +7,12 @@ _make_triangle_mesh :: proc() -> Mesh2D {
 	triangle_mesh: Mesh2D
 	
 	// odinfmt: disable
-	// triangle vertices
+	// triangle vertex buffer
 	vertices := [?]f32 {
-		// position			// albedo
-		 0.0,  0.5, 0.0,	1.0, 1.0, 1.0, 1.0,
-		 0.5, -0.5, 0.0,	0.0, 1.0, 1.0, 1.0,
-		-0.5, -0.5, 0.0,	1.0, 0.0, 1.0, 1.0,
+		// position			// albedo               // texcoords
+		 0.0,  0.5, 0.0,	1.0, 1.0, 1.0, 1.0,     0.5, 0.0,
+		-0.5, -0.5, 0.0,	1.0, 0.0, 1.0, 1.0,     0.0, 1.0,
+		 0.5, -0.5, 0.0,	0.0, 1.0, 1.0, 1.0,     1.0, 1.0
 	}
 	indices := [?]u16 {
 		0, 1, 2,

@@ -48,6 +48,7 @@ init :: proc(renderer: ^Renderer) {
 				attrs = {
 					shaders.ATTR_default_position = {format = .FLOAT3},
 					shaders.ATTR_default_albedo0 = {format = .FLOAT4},
+					shaders.ATTR_default_texcoord0 = {format = .FLOAT2},
 				},
 			},
 			index_type = .UINT16,
@@ -62,9 +63,9 @@ init :: proc(renderer: ^Renderer) {
 
 
 	// loading textures
-	renderer.textures[utils.TextureID.PLAYER_SPRITE] = {
-		id = decode_and_upload_tex(utils.load_image_file("./assets/textures/player_sprite.png")),
-	}
+	renderer.textures[utils.TextureID.PLAYER_SPRITE] = decode_and_upload_tex(
+		utils.load_image_file("./assets/textures/player_sprite.png"),
+	)
 }
 
 update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
@@ -101,8 +102,8 @@ cleanup :: proc(renderer: ^Renderer) {
 	sg.shutdown()
 }
 
-// decodes image using stbi and uploads it to the gpu, returns the GPU handler for uploaded texture
-decode_and_upload_tex :: proc(img_data: []byte) -> sg.Image {
+// decodes image using stbi and uploads it to the gpu, returns Texture2D
+decode_and_upload_tex :: proc(img_data: []byte) -> Texture2D {
 	width, height, channels_in_file: i32
 	// 4 desired channels as GPU expects 4 channels
 	pixel_data := stbi.load_from_memory(
@@ -117,15 +118,26 @@ decode_and_upload_tex :: proc(img_data: []byte) -> sg.Image {
 		logger.error("Error decoding pixel data")
 	}
 
+	// NOTE: size is (w * h * 4) because for each pixel there are 4 bytes of data i.e. RGBA
 	img_handle := sg.make_image(
-	{
-		width = width,
-		height = height,
-		pixel_format = .RGBA8,
-		// NOTE: size is (w * h * 4) its multiplied by 4 because for each pixel there are 4 bytes of data i.e. RGBA
-		data = {mip_levels = {0 = {ptr = pixel_data, size = uint(width * height * 4)}}},
-	},
+		{
+			width = width,
+			height = height,
+			pixel_format = .RGBA8,
+			data = {mip_levels = {0 = {ptr = pixel_data, size = uint(width * height * 4)}}},
+		},
 	)
 
-	return img_handle
+	// cleanup stbi created pixel_data
+	stbi.image_free(pixel_data)
+
+	view_handle := sg.make_view({texture = {image = img_handle}})
+
+	return {
+		sg_img = img_handle,
+		sg_view = view_handle,
+		width = width,
+		height = height,
+		channels = channels_in_file,
+	}
 }

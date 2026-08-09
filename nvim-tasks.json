@@ -1,19 +1,19 @@
 [
     {
-        "label": "build-debug-win32",
-        "cmd": "odin run ./build_scripts -collection:topdown_game=. -out:./build_scripts/build.exe -- --debug"
+        "label": "build-debug-win32-d3d11",
+        "cmd": "odin run ./build_scripts -collection:topdown_game=. -out:./build_scripts/build.exe -- --debug --d3d11"
     },
     {
-        "label": "build-run-debug-win32",
-        "cmd": "odin run ./build_scripts -collection:topdown_game=. -out:./build_scripts/build.exe -- --debug && .\\build\\debug\\main.exe"
+        "label": "build-run-debug-win32-d3d11",
+        "cmd": "odin run ./build_scripts -collection:topdown_game=. -out:./build_scripts/build.exe -- --debug --d3d11 && .\\build\\debug\\main.exe"
     },
     {
-        "label": "build-release-win32",
-        "cmd": "odin run ./build_scripts -collection:topdown_game=.  -out:./build_scripts/build.exe -- --release"
+        "label": "build-release-win32-d3d11",
+        "cmd": "odin run ./build_scripts -collection:topdown_game=.  -out:./build_scripts/build.exe -- --release --d3d11"
     },
     {
-        "label": "build-run-release-win32",
-        "cmd": "odin run ./build_scripts -collection:topdown_game=.  -out:./build_scripts/build.exe -- --release && build\\release\\main.exe"
+        "label": "build-run-release-win32-d3d11",
+        "cmd": "odin run ./build_scripts -collection:topdown_game=.  -out:./build_scripts/build.exe -- --release --d3d11 && build\\release\\main.exe"
     },
     {
         "label": "compile-shaders",
