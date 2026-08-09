@@ -47,7 +47,6 @@ init :: proc(renderer: ^Renderer) {
 			layout = {
 				attrs = {
 					shaders.ATTR_default_position = {format = .FLOAT3},
-					shaders.ATTR_default_albedo0 = {format = .FLOAT4},
 					shaders.ATTR_default_texcoord0 = {format = .FLOAT2},
 				},
 			},
@@ -75,7 +74,8 @@ update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 	// uniforms set per frame
 	frame_params := shaders.Frame_Params {
 		VIEW       = game.view_matrix_from_camera2d(&g.camera),
-		PROJECTION = gmath.Orthographic_Mat4(
+		// FOLLOWS Y+ "Down" CONVENTION
+		PROJECTION = gmath.Orthographic_Mat4_RH_ZO(
 			0,
 			renderer.internal_resolution.x,
 			renderer.internal_resolution.y,

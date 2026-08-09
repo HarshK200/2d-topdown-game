@@ -7,13 +7,13 @@ _make_quad_mesh :: proc() -> Mesh2D {
 	quad_mesh: Mesh2D
 	
 	// odinfmt: disable
-	// quad vertex buffer
+	// quad vertex buffer. NOTE: FOLLOWS Y+ "Down" CONVENTION
 	vertices := [?]f32{
-		// position			    // albedo               // texcoords
-		-0.5,  0.5, 0.0,		1.0, 0.0, 0.0, 1.0,     0.0, 1.0,   // top-left
-		 0.5,  0.5, 0.0,		0.0, 1.0, 0.0, 1.0,     1.0, 1.0,   // top-right
-		 0.5, -0.5, 0.0,		0.0, 0.0, 1.0, 1.0,     1.0, 0.0,   // bottom-right
-		-0.5, -0.5, 0.0,		1.0, 1.0, 0.0, 1.0,     0.0, 0.0    // bottom-left
+		// position			// texcoords
+		-0.5, -0.5, 0.0,	0.0, 0.0,   // top-left
+		 0.5, -0.5, 0.0,	1.0, 0.0,   // top-right
+		 0.5,  0.5, 0.0,	1.0, 1.0,   // bottom-right
+		-0.5,  0.5, 0.0,	0.0, 1.0    // bottom-left
 	}
 	indices := [?]u16 {
 		0, 1, 2,

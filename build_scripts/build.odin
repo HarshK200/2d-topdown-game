@@ -61,13 +61,15 @@ run :: proc() -> int {
 		return 1
 	}
 	build_mode = os.args[1]
-	if (len(os.args) < 3 && build_mode != "--shader-only") {
-		logger.error(
-			"No graphics api backend specified.\navailable options are:\nOn Windows:\t--d3d11,--opengl\n*no other platform build supported yet*",
-		)
-		return 1
+	if (build_mode != "--shader-only") {
+		if (len(os.args) < 3) {
+			logger.error(
+				"No graphics api backend specified.\navailable options are:\nOn Windows:\t--d3d11,--opengl\n*no other platform build supported yet*",
+			)
+			return 1
+		}
+		graphics_backend = os.args[2]
 	}
-	graphics_backend = os.args[2]
 
 	// =============== Setup odin build mode and api backend ===============
 	switch {
@@ -105,14 +107,21 @@ run :: proc() -> int {
 		return 1
 	}
 
+	// setup defines for backend api
 	switch {
 	case graphics_backend == "--opengl":
-        // BUG: GL backend on windows breaks, just use d3d11 *trust me i tried to get opengl running on windows*
+		// BUG: GL backend on windows breaks, just use d3d11 *trust me i tried to get opengl running on windows*
 		// append(&build_flags, "-define:SOKOL_USE_GL=true")
-        break
+		break
 
 	case graphics_backend == "--d3d11":
-        break
+		break
+	case:
+		if (build_mode != "--shader-only") {
+			logger.error("No graphics_backend provided")
+			return 1
+		}
+		break
 	}
 
 	// =============== Add generic build flags ===============

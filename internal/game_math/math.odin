@@ -57,25 +57,9 @@ Translate_Mat4 :: proc(translation: vec3) -> mat4 {
 //
 // rotation_mat4
 
-
-/*
-   returns a 4x4 right handed orthographic projection matrix based on os,
-   DirectX convention for windows and OpenGL convention for linux
-*/
-Orthographic_Mat4 :: proc(left, right, bottom, top, near, far: f32) -> mat4 {
-	switch {
-	case ODIN_OS == .Windows:
-		return _Orthographic_Mat4_RH_ZO(left, right, bottom, top, near, far)
-
-	case ODIN_OS == .Linux:
-		return _Orthographic_Mat4_RH_NO(left, right, bottom, top, near, far)
-	case:
-		panic("Unsupported platform")
-	}
-}
-
 /* retuns a 4x4 right handed orthographic projection matrix with Z ranging from -1 to 1 (OpenGL convention)
    Left, Right, Bottom, Top specify the coordinate of there respective clipping space
+   NOTE: THIS FOLLOWS Y+ "Down" CONVENTION
 
 visualized:
 [ 2.0/width     0           0               -1 ]
@@ -83,8 +67,7 @@ visualized:
 [   0           0       2.0/(near - far)    z* ]        z* = (near + far) / (near - far)
 [   0           0           0                1 ]
 */
-@(private)
-_Orthographic_Mat4_RH_NO :: proc(left, right, bottom, top, near, far: f32) -> mat4 {
+Orthographic_Mat4_RH_NO :: proc(left, right, bottom, top, near, far: f32) -> mat4 {
 	m := Identity_Mat4()
 
 	m[0, 0] = 2.0 / (right - left)
@@ -100,6 +83,7 @@ _Orthographic_Mat4_RH_NO :: proc(left, right, bottom, top, near, far: f32) -> ma
 
 /* retuns a 4x4 right handed orthographic projection matrix with Z ranging from 0 to 1 (DirectX/vulkan convention)
    Left, Right, Bottom, Top specify the coordinate of there respective clipping space
+   NOTE: THIS FOLLOWS Y+ "Down" CONVENTION
 
 visualized:
 [ 2.0/width     0           0               -1 ]
@@ -107,8 +91,7 @@ visualized:
 [   0           0       1.0/(near - far)    z* ]        z* = (near) / (near - far)
 [   0           0           0                1 ]
 */
-@(private)
-_Orthographic_Mat4_RH_ZO :: proc(left, right, bottom, top, near, far: f32) -> mat4 {
+Orthographic_Mat4_RH_ZO :: proc(left, right, bottom, top, near, far: f32) -> mat4 {
 	m := Identity_Mat4()
 
 	m[0, 0] = 2.0 / (right - left)
