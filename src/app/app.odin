@@ -63,6 +63,13 @@ _init_cb :: proc "c" () {
 }
 
 @(private)
+_input_cb :: proc "c" (event: ^sapp.Event) {
+	context = APP.Context
+
+	// TODO create input manager
+}
+
+@(private)
 _frame_cb :: proc "c" () {
 	context = APP.Context
 
@@ -74,13 +81,6 @@ _frame_cb :: proc "c" () {
 }
 
 @(private)
-_input_cb :: proc "c" (event: ^sapp.Event) {
-	context = APP.Context
-
-	// TODO create input manager
-}
-
-@(private)
 _cleanup_cb :: proc "c" () {
 	context = APP.Context
 
@@ -88,4 +88,5 @@ _cleanup_cb :: proc "c" () {
 	renderer.cleanup(&APP.Renderer)
 
 	virtual.arena_destroy(&APP.Arena)
+	free_all(context.temp_allocator)
 }

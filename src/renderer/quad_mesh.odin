@@ -7,7 +7,12 @@ _make_quad_mesh :: proc() -> Mesh2D {
 	quad_mesh: Mesh2D
 	
 	// odinfmt: disable
-	// quad vertex buffer. NOTE: FOLLOWS Y+ "Down" CONVENTION
+	// quad vertex buffer.
+    //
+    // NOTE:
+    // 1. FOLLOWS Y+ "Down" CONVENTION
+    // 2. If no (PROJECTION * VIEW * MODEL * vertex) transformation is done
+    //    these vertex coords would be treated as clip space coords,
 	vertices := [?]f32{
 		// position			// texcoords
 		-0.5, -0.5, 0.0,	0.0, 0.0,   // top-left

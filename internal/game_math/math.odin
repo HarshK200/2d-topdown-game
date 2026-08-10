@@ -66,6 +66,8 @@ visualized:
 [   0       2.0/height      0               -1 ]
 [   0           0       2.0/(near - far)    z* ]        z* = (near + far) / (near - far)
 [   0           0           0                1 ]
+
+    WARNING: OpenGL is not supported yet this projection matrix is just for testing purposes
 */
 Orthographic_Mat4_RH_NO :: proc(left, right, bottom, top, near, far: f32) -> mat4 {
 	m := Identity_Mat4()

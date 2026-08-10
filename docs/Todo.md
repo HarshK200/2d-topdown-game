@@ -7,12 +7,15 @@
     - **640x360 internal render resolution**
     - **1920x1080 testing screen resolution**
   - [x] Created Arena for game memory and using temp allocator for per frame allocations
-  - [ ] Create asset manager to handle texture file loading
-  - [ ] Sample texture onto player's quad_mesh
-  - [ ] Create input controller and handle input *use sokol's sapp input callback input*
-  - [ ] Make the rect move with realtime input
+  - [x] store textures on renderer and have a reference of which which texture is used by which entity on the entity for e.g.
 
-# TEST:
+        ```player.sprite.texture_id```
+
+  - [x] Sample texture onto player's quad_mesh
+  - [ ] Create input controller and handle input *use sokol's sapp input callback input*
+  - [ ] Make the player rect move with realtime input
+
+# EXPERIMENT:
 - [ ] Maybe make the following directory structure for renderer:
     renderer/
         mesh/

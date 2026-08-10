@@ -25,6 +25,7 @@ in vec2 texcoord0;
 out vec2 uv;
 
 void main() {
+    // NOTE: gl_Position coordinates MUST be in clip space
     gl_Position = PROJECTION * VIEW * MODEL * vec4(position, 1.0);
 
     uv = mix(UV_MIN, UV_MAX, texcoord0);
