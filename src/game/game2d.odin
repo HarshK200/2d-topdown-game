@@ -1,16 +1,20 @@
 package game
 
+import "topdown_game:src/input"
+
 Game2D :: struct {
 	player: Player,
 	camera: Camera2D,
 }
 
-init :: proc(game: ^Game2D) {
+Init :: proc(game: ^Game2D) {
 	init_player(game)
 	init_camera(game)
 }
 
-update :: proc(game: ^Game2D) {
+Update :: proc(game: ^Game2D, im: ^input.InputManager) {
+	update_player(game, im)
 }
 
-cleanup :: proc(game: ^Game2D) {}
+
+Cleanup :: proc(game: ^Game2D) {}

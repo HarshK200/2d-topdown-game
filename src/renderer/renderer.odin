@@ -24,7 +24,7 @@ Renderer :: struct {
 	textures:            [1]Texture2D,
 }
 
-init :: proc(renderer: ^Renderer) {
+Init :: proc(renderer: ^Renderer) {
 	logger.info("Initializing renderer...")
 	renderer.internal_resolution = {640, 360}
 
@@ -67,7 +67,7 @@ init :: proc(renderer: ^Renderer) {
 	)
 }
 
-update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
+Update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 	sg.begin_pass({action = renderer.default_pass_action, swapchain = sglue.swapchain()})
 	sg.apply_pipeline(renderer.default_pipeline)
 
@@ -95,13 +95,14 @@ update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 	sg.commit()
 }
 
-cleanup :: proc(renderer: ^Renderer) {
+Cleanup :: proc(renderer: ^Renderer) {
 	_destroy_mesh(&renderer.triangle_mesh)
 	_destroy_mesh(&renderer.quad_mesh)
 
 	sg.shutdown()
 }
 
+@(private)
 // decodes image using stbi and uploads it to the gpu, returns Texture2D
 decode_and_upload_tex :: proc(img_data: []byte) -> Texture2D {
 	width, height, channels_in_file: i32

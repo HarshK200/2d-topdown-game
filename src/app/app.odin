@@ -6,6 +6,7 @@ import "core:mem/virtual"
 import "topdown_game:internal/logger"
 
 import "topdown_game:src/game"
+import "topdown_game:src/input"
 import "topdown_game:src/renderer"
 import sapp "topdown_game:third_party/sokol/app"
 import slog "topdown_game:third_party/sokol/log"
@@ -13,12 +14,13 @@ import slog "topdown_game:third_party/sokol/log"
 WIDTH :: 1280
 HEIGHT :: 720
 App :: struct {
-	Game:     game.Game2D,
-	Renderer: renderer.Renderer,
+	Game:         game.Game2D,
+	Renderer:     renderer.Renderer,
+	InputManager: input.InputManager,
 
 	// memory management
-	Context:  runtime.Context,
-	Arena:    virtual.Arena,
+	Context:      runtime.Context,
+	Arena:        virtual.Arena,
 }
 
 // The global instance of app, which is used when app.run() is called
@@ -58,25 +60,29 @@ _init_cb :: proc "c" () {
 	context.allocator = virtual.arena_allocator(&APP.Arena)
 	APP.Context = context
 
-	game.init(&APP.Game)
-	renderer.init(&APP.Renderer)
+	game.Init(&APP.Game)
+	renderer.Init(&APP.Renderer)
 }
 
 @(private)
 _input_cb :: proc "c" (event: ^sapp.Event) {
 	context = APP.Context
 
-	// TODO create input manager
+	#partial switch event.type {
+	case .KEY_UP, .KEY_DOWN:
+		input.RegisterInput(&APP.InputManager, event)
+	}
 }
 
 @(private)
 _frame_cb :: proc "c" () {
 	context = APP.Context
 
-	game.update(&APP.Game)
-	renderer.update(&APP.Renderer, &APP.Game)
+	game.Update(&APP.Game, &APP.InputManager)
+	renderer.Update(&APP.Renderer, &APP.Game)
 
-	// cleanup temp_allocator
+	// per-frame cleanup
+	input.Update(&APP.InputManager)
 	free_all(context.temp_allocator)
 }
 
@@ -84,8 +90,8 @@ _frame_cb :: proc "c" () {
 _cleanup_cb :: proc "c" () {
 	context = APP.Context
 
-	game.cleanup(&APP.Game)
-	renderer.cleanup(&APP.Renderer)
+	game.Cleanup(&APP.Game)
+	renderer.Cleanup(&APP.Renderer)
 
 	virtual.arena_destroy(&APP.Arena)
 	free_all(context.temp_allocator)

@@ -1,10 +1,29 @@
 package game_math
 
+import "core:math"
+import "topdown_game:internal/logger"
 vec2 :: [2]f32
 vec3 :: [3]f32
 vec4 :: [4]f32
 mat4 :: matrix[4, 4]f32 // column major by default i.e. stores column1, column2 in sequence memory
 vec2i :: [2]i32
+
+// normalizesis a vector
+Normalize :: proc {
+	normalize_vec2,
+}
+
+// normalizes a vec2
+@(private)
+normalize_vec2 :: proc(v: vec2) -> vec2 {
+	vec_len := math.sqrt(math.pow(v.x, 2) + math.pow(v.y, 2))
+	// fix divide by zero bug
+	if vec_len == 0 {
+		return {0, 0}
+	}
+	normalized := v / vec_len
+	return normalized
+}
 
 /* returns an 4x4 identity matrix
 
