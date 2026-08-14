@@ -1,5 +1,6 @@
 package input
 
+import gmath "topdown_game:internal/game_math"
 import sapp "topdown_game:third_party/sokol/app"
 
 Actions :: enum {
@@ -17,26 +18,43 @@ ActionState :: enum {
 
 InputManager :: struct {
 	action_map: [Actions]ActionState, // defaults to the first ActionState value i.e. IDLE
+	mouse_pos:  gmath.vec2,
+
+    window_width : i32,
+    window_height : i32
 }
 
-// Processes a Sokol input event and updates the corresponding action state.
+// Processes a Sokol input event type = KEY_DOWN/KEY_UP event and updates the corresponding action state.
 //
 // NOTE: Input events must be processed before InputManager.Update(),
 // which transitions transient action states at the end of the frame.
-RegisterInput :: proc(im: ^InputManager, event: ^sapp.Event) {
-	switch {
-	case event.key_code == .W:
+RegisterKeyboardInput :: proc(im: ^InputManager, event: ^sapp.Event) {
+	#partial switch event.key_code {
+	case .W:
 		register_action_map(im, event, .MOVE_UP)
 
-	case event.key_code == .S:
+	case .S:
 		register_action_map(im, event, .MOVE_DOWN)
 
-	case event.key_code == .A:
+	case .A:
 		register_action_map(im, event, .MOVE_LEFT)
 
-	case event.key_code == .D:
+	case .D:
 		register_action_map(im, event, .MOVE_RIGHT)
 	}
+}
+
+// Processes a Sokol input event type = MOUSE_MOVE and updates the corresponding action state.
+//
+// NOTE: Input events must be processed before InputManager.Update(),
+// which transitions transient action states at the end of the frame.
+RegisterMouseMove :: proc(im: ^InputManager, event: ^sapp.Event) {
+    // NOTE: the event.mouse_x and event.mouse_y are in pixel-coords e.g. 1280x720
+	im.mouse_pos.x = event.mouse_x
+	im.mouse_pos.y = event.mouse_y
+
+    im.window_width = event.window_width
+    im.window_height = event.window_height
 }
 
 // Advances all action states for the next frame.

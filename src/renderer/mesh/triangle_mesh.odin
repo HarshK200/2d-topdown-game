@@ -1,9 +1,8 @@
-package renderer
+package mesh
 
 import sg "topdown_game:third_party/sokol/gfx"
 
-@(private)
-_make_triangle_mesh :: proc() -> Mesh2D {
+make_triangle_mesh :: proc() -> Mesh2D {
 	triangle_mesh: Mesh2D
 	
 	// odinfmt: disable

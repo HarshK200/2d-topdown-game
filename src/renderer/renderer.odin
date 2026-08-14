@@ -3,6 +3,7 @@ package renderer
 import gmath "topdown_game:internal/game_math"
 import "topdown_game:internal/logger"
 import game "topdown_game:src/game"
+import "topdown_game:src/renderer/mesh"
 import "topdown_game:src/utils"
 import stbi "vendor:stb/image"
 
@@ -12,21 +13,19 @@ import sglue "topdown_game:third_party/sokol/glue"
 import slog "topdown_game:third_party/sokol/log"
 
 Renderer :: struct {
-	internal_resolution: [2]f32,
 	default_pipeline:    sg.Pipeline,
 	default_pass_action: sg.Pass_Action,
 
 	// premitive 2d meshs
-	triangle_mesh:       Mesh2D,
-	quad_mesh:           Mesh2D,
+	triangle_mesh:       mesh.Mesh2D,
+	quad_mesh:           mesh.Mesh2D,
 
 	// textures
-	textures:            [1]Texture2D,
+	textures:            [2]Texture2D,
 }
 
 Init :: proc(renderer: ^Renderer) {
 	logger.info("Initializing renderer...")
-	renderer.internal_resolution = {640, 360}
 
 	// setup device sokol sfx environment for platform specific graphics API like DirectX, OpenGL, etc
 	sg.setup({environment = sglue.environment(), logger = {func = slog.func}})
@@ -57,14 +56,19 @@ Init :: proc(renderer: ^Renderer) {
 
 
 	// primitives setup
-	renderer.triangle_mesh = _make_triangle_mesh()
-	renderer.quad_mesh = _make_quad_mesh()
+	renderer.triangle_mesh = mesh.make_triangle_mesh()
+	renderer.quad_mesh = mesh.make_quad_mesh()
 
 
 	// loading textures
 	renderer.textures[utils.TextureID.PLAYER_SPRITE] = decode_and_upload_tex(
 		utils.load_image_file("./assets/textures/player_sprite.png"),
 	)
+	// ================== TEST TEXTURE ==================
+	renderer.textures[utils.TextureID.GRASS_TILE] = decode_and_upload_tex(
+		utils.load_image_file("./assets/textures/single_grass_tile.png"),
+	)
+	// ================== TEST TEXTURE ==================
 }
 
 Update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
@@ -77,8 +81,8 @@ Update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 		// FOLLOWS Y+ "Down" CONVENTION
 		PROJECTION = gmath.Orthographic_Mat4_RH_ZO(
 			0,
-			renderer.internal_resolution.x,
-			renderer.internal_resolution.y,
+			utils.INTERNAL_RENDER_RESOLUTION.x,
+			utils.INTERNAL_RENDER_RESOLUTION.y,
 			0,
 			g.camera.near,
 			g.camera.far,
@@ -90,14 +94,18 @@ Update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 	// actual drawing
 	draw_player(renderer, g)
 
+	// ================== TESTING TILEDRAW ==================
+	draw_grass_tile(renderer, g)
+	// ================== TESTING TILEDRAW ==================
+
 
 	sg.end_pass()
 	sg.commit()
 }
 
 Cleanup :: proc(renderer: ^Renderer) {
-	_destroy_mesh(&renderer.triangle_mesh)
-	_destroy_mesh(&renderer.quad_mesh)
+	mesh.destroy_mesh(&renderer.triangle_mesh)
+	mesh.destroy_mesh(&renderer.quad_mesh)
 
 	sg.shutdown()
 }

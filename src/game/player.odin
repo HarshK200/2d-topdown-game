@@ -12,23 +12,24 @@ Player :: struct {
 	// TODO: rotation
 }
 
-init_player :: proc(game: ^Game2D) {
-	game.player.position = {100.0, 100.0}
-	game.player.scale = {32, 48}
-	game.player.speed = 0.5
+init_player :: proc(g: ^Game2D) {
+	g.player.position = {0.0, 0.0}
+	g.player.scale = {32, 48}
+	g.player.speed = 1.0
 
-	game.player.sprite = {
+	g.player.sprite = {
 		texture_id   = .PLAYER_SPRITE,
 		texel_coords = {0, 0},
 	}
 }
 
-update_player :: proc(game: ^Game2D, im: ^input.InputManager) {
+update_player :: proc(g: ^Game2D, im: ^input.InputManager) {
 	input_dir := calculate_input_dir(im)
 
-	new_pos := game.player.position.xy + (input_dir.xy * game.player.speed)
+	// TODO: make this frame rate independent i.e. calculate delta i.e. frame time
+	new_pos := g.player.position.xy + (input_dir.xy * g.player.speed)
 
-	game.player.position = new_pos
+	g.player.position = new_pos
 }
 
 
@@ -36,7 +37,6 @@ update_player :: proc(game: ^Game2D, im: ^input.InputManager) {
 calculate_input_dir :: proc(im: ^input.InputManager) -> gmath.vec2 {
 	input_dir: gmath.vec2 = {0, 0}
 
-	// TODO: make this frame rate independent
 	if input.IsActionPressed(im, .MOVE_UP) || input.IsActionHeld(im, .MOVE_UP) {
 		input_dir.y = -1
 	}

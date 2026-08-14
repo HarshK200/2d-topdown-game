@@ -4,6 +4,7 @@ import "base:runtime"
 import "core:mem"
 import "core:mem/virtual"
 import "topdown_game:internal/logger"
+import "topdown_game:src/utils"
 
 import "topdown_game:src/game"
 import "topdown_game:src/input"
@@ -11,8 +12,6 @@ import "topdown_game:src/renderer"
 import sapp "topdown_game:third_party/sokol/app"
 import slog "topdown_game:third_party/sokol/log"
 
-WIDTH :: 1280
-HEIGHT :: 720
 App :: struct {
 	Game:         game.Game2D,
 	Renderer:     renderer.Renderer,
@@ -39,8 +38,8 @@ run :: proc() {
 			frame_cb = _frame_cb,
 			event_cb = _input_cb,
 			cleanup_cb = _cleanup_cb,
-			width = WIDTH,
-			height = HEIGHT,
+			width = utils.DEFAULT_WINDOW_WIDTH,
+			height = utils.DEFAULT_WINDOW_HEIGHT,
 			fullscreen = false,
 			window_title = "2d-topdown-game",
 			icon = {sokol_default = true},
@@ -70,7 +69,9 @@ _input_cb :: proc "c" (event: ^sapp.Event) {
 
 	#partial switch event.type {
 	case .KEY_UP, .KEY_DOWN:
-		input.RegisterInput(&APP.InputManager, event)
+		input.RegisterKeyboardInput(&APP.InputManager, event)
+	case .MOUSE_MOVE:
+		input.RegisterMouseMove(&APP.InputManager, event)
 	}
 }
 

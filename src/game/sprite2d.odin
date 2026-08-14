@@ -2,6 +2,7 @@ package game
 
 import gmath "topdown_game:internal/game_math"
 import "topdown_game:src/utils"
+
 Sprite2D :: struct {
 	texture_id:   utils.TextureID,
 	// these are the texture coordinates in pixels

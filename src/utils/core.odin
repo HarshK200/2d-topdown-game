@@ -1,6 +1,7 @@
 package utils
 
 import "core:os"
+import gmath "topdown_game:internal/game_math"
 import "topdown_game:internal/logger"
 
 // this loads an image using odin's core:os and retuns the file data slice
@@ -29,4 +30,8 @@ load_image_file :: proc(img_path: string) -> []byte {
 	}
 
 	return fdata
+}
+
+screen_to_ndc :: proc(mouse_pos: gmath.vec2, screen_size: gmath.vec2) -> gmath.vec2 {
+	return {(mouse_pos.x / screen_size.x) * 2.0 - 1.0, 1.0 - (mouse_pos.y / screen_size.y) * 2.0}
 }

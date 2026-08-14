@@ -1,7 +1,6 @@
 package game_math
 
 import "core:math"
-import "topdown_game:internal/logger"
 vec2 :: [2]f32
 vec3 :: [3]f32
 vec4 :: [4]f32
@@ -94,6 +93,7 @@ Orthographic_Mat4_RH_NO :: proc(left, right, bottom, top, near, far: f32) -> mat
 	m[0, 0] = 2.0 / (right - left)
 	m[1, 1] = 2.0 / (top - bottom)
 	m[2, 2] = 2.0 / (near - far)
+	m[3, 3] = 1.0
 
 	m[3].x = (left + right) / (left - right)
 	m[3].y = (bottom + top) / (bottom - top)
@@ -118,10 +118,30 @@ Orthographic_Mat4_RH_ZO :: proc(left, right, bottom, top, near, far: f32) -> mat
 	m[0, 0] = 2.0 / (right - left)
 	m[1, 1] = 2.0 / (top - bottom)
 	m[2, 2] = 1.0 / (near - far)
+	m[3, 3] = 1.0
 
 	m[3].x = (left + right) / (left - right)
 	m[3].y = (bottom + top) / (bottom - top)
 	m[3].z = (near) / (near - far)
 
 	return m
+}
+
+// Returns an inverse for the given orthographic projection matrix. Works for all orthographic
+// projection matrices, regardless of handedness or NDC convention.
+//
+// TODO: i understand the scaling part but what's with the third coloumn? i.e. translation?
+InvOrthographic_Mat4 :: proc(OrthoMatrix: mat4) -> mat4 {
+	result := Identity_Mat4()
+
+	result[0, 0] = 1.0 / OrthoMatrix[0, 0]
+	result[1, 1] = 1.0 / OrthoMatrix[1, 1]
+	result[2, 2] = 1.0 / OrthoMatrix[2, 2]
+	result[3, 3] = 1.0
+
+	result[3].x = -OrthoMatrix[3].x * result[0, 0]
+	result[3].y = -OrthoMatrix[3].y * result[1, 1]
+	result[3].z = -OrthoMatrix[3].z * result[2, 2]
+
+	return result
 }
