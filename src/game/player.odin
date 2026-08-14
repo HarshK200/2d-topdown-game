@@ -18,7 +18,7 @@ init_player :: proc(g: ^Game2D) {
 	g.player.speed = 1.0
 
 	g.player.sprite = {
-		texture_id   = .PLAYER_SPRITE,
+		texture_id   = "PlayerSprite",
 		texel_coords = {0, 0},
 	}
 }

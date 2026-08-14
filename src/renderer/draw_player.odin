@@ -4,7 +4,6 @@ import gmath "topdown_game:internal/game_math"
 import "topdown_game:src/game"
 import "topdown_game:src/renderer/mesh"
 import shaders "topdown_game:src/shaders/build"
-import "topdown_game:src/utils"
 import sg "topdown_game:third_party/sokol/gfx"
 
 draw_player :: proc(renderer: ^Renderer, g: ^game.Game2D) {
@@ -12,7 +11,7 @@ draw_player :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 		gmath.Translate_Mat4({g.player.position.x, g.player.position.y, 0.0}) *
 		gmath.Scale_Mat4({g.player.scale.x, g.player.scale.y, 1.0})
 
-	player_tex := renderer.textures[utils.TextureID.PLAYER_SPRITE]
+	player_tex := renderer.textures[g.player.sprite.texture_id]
 	player_tex_coords := g.player.sprite.texel_coords
 
 	// normalized 0..1 player uv min to be sampled from the texture

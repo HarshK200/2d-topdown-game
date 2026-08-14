@@ -6,7 +6,9 @@ Camera2D :: struct {
 	position: gmath.vec2,
 	near:     f32,
 	far:      f32,
-	// todo add rotation
+
+	// TODO: add rotation
+	// TODO: add an offset: vec2 so when the view matrix is created the camera is offset by said value, so the camera's center is at center of the screen not top-left
 }
 
 init_camera :: proc(g: ^Game2D) {

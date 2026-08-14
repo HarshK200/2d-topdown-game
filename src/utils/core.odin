@@ -32,6 +32,9 @@ load_image_file :: proc(img_path: string) -> []byte {
 	return fdata
 }
 
-screen_to_ndc :: proc(mouse_pos: gmath.vec2, screen_size: gmath.vec2) -> gmath.vec2 {
-	return {(mouse_pos.x / screen_size.x) * 2.0 - 1.0, 1.0 - (mouse_pos.y / screen_size.y) * 2.0}
+// converts any screen space xy coordinates to ndc i.e. -1.0 to +1.0
+// NOTE: Screen space coords are +Y "Down"
+// and converted NDC coords are +Y "Up", which is the convention in both DirexX and OpenGL *nobody cares about vulkan*
+screen_to_ndc :: proc(pos: gmath.vec2, screen_size: gmath.vec2) -> gmath.vec2 {
+	return {(pos.x / screen_size.x) * 2.0 - 1.0, 1.0 - (pos.y / screen_size.y) * 2.0}
 }

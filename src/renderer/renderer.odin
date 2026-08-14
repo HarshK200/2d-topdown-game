@@ -21,7 +21,7 @@ Renderer :: struct {
 	quad_mesh:           mesh.Mesh2D,
 
 	// textures
-	textures:            [2]Texture2D,
+	textures:            map[string]Texture2D,
 }
 
 Init :: proc(renderer: ^Renderer) {
@@ -61,14 +61,18 @@ Init :: proc(renderer: ^Renderer) {
 
 
 	// loading textures
-	renderer.textures[utils.TextureID.PLAYER_SPRITE] = decode_and_upload_tex(
-		utils.load_image_file("./assets/textures/player_sprite.png"),
+	reserve(&renderer.textures, 2)
+
+	map_insert(
+		&renderer.textures,
+		"PlayerSprite",
+		decode_and_upload_tex(utils.load_image_file("./assets/textures/player_sprite.png")),
 	)
-	// ================== TEST TEXTURE ==================
-	renderer.textures[utils.TextureID.GRASS_TILE] = decode_and_upload_tex(
-		utils.load_image_file("./assets/textures/single_grass_tile.png"),
+	map_insert(
+		&renderer.textures,
+		"GrassTile",
+		decode_and_upload_tex(utils.load_image_file("./assets/textures/single_grass_tile.png")),
 	)
-	// ================== TEST TEXTURE ==================
 }
 
 Update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
@@ -93,10 +97,6 @@ Update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 
 	// actual drawing
 	draw_player(renderer, g)
-
-	// ================== TESTING TILEDRAW ==================
-	draw_grass_tile(renderer, g)
-	// ================== TESTING TILEDRAW ==================
 
 
 	sg.end_pass()
