@@ -1,3 +1,4 @@
+```
 # Y coordinate transformation convention used by this game's renderer
 
 Local Space (Y+ "Down")
@@ -16,3 +17,4 @@ Normalized Device Coordinates (NDC) (Y+ "Up")
     │ Viewport Transform (GPU) [For D3D11 an internal Y coordinate flip happens]
     ▼
 Screen Space (Pixels) (Y+ "Down")
+```
