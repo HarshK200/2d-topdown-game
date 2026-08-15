@@ -117,10 +117,10 @@ src/
 
 # Modules dependency graph (follows seperation of concerns)
 
-APP ---Ownes--> Game
-APP ---Ownes--> Renderer
-APP ---Ownes--> Input
+- APP ---Ownes--> Game
+- APP ---Ownes--> Renderer
+- APP ---Ownes--> Input
 
-utils ---Read only access---> Renderer, Game, Input, *all
-Game ---Read only access---> Renderer
-Input ---Read only access---> Game
+- utils ---Read only access---> Renderer, Game, Input, *all
+- Game ---Read only access---> Renderer
+- Input ---Read only access---> Game
