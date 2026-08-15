@@ -1,5 +1,27 @@
 # TODO CORE
 
+- [ ] LEARN: how to effeciently manage textures NOTE: watch cakez video on texture atlas or handmade hero
+- [ ] Tilemap system
+- [ ] Chunk loading
+- [ ] Rotation matrix
+- [ ] Text rendering
+- [ ] Audio processing
+
+# TODO MISC
+
+- [ ] Make the build script faster
+  - [ ] Make use of multi threading to compile shaders and run odin build parallely (adds around 200ms without multi threading)
+  - [ ] Find an alternative for process_exec() as that does stdout, stderr polling which adds around 200ms
+- [ ] Particle system: Learn how to make nice looking pixel art particles
+
+
+# DOING:
+- [ ] Procedural world generation
+    - [x] Figure out how to divide world into chunks *its basically just entity_chunk_coordinate = world_pos.xy/chunk_size.xy*
+    - [ ] Tilemap system
+    - [ ] Chunk loading
+
+# DONE:
 - [x] figure out how to setup sokol
   - [x] Build sokol static library
   - [x] Setup sokol bindings for correct intellisense
@@ -28,79 +50,77 @@
   - [x] Sample texture onto player's quad_mesh
   - [x] Create input controller and handle input *use sokol's sapp input callback input*
   - [x] Make the player rect move with realtime input
-- [x] LEARN: how to effeciently manage textures NOTE: watch cakez video on texture atlas or handmade hero
-- [ ] Rotation matrix
-- [ ] Text rendering
-- [ ] Audio processing
-- [ ] Tilemap system
-- [ ] Chunk loading
-
-# TODO MISC
-
-- [ ] Make the build script faster
-  - [ ] Make use of multi threading to compile shaders and run odin build parallely (adds around 200ms without multi threading)
-  - [ ] Find an alternative for process_exec() as that does stdout, stderr polling which adds around 200ms
 
 
-# DOING:
-- [ ] Procedural world generation
-    - [ ] Figure out how to divide world into chunks *its basically just entity_chunk_coordinate = world_pos.xy/chunk_size.xy*
 
 # EXPERIMENT:
-- [ ] Maybe make the following directory structure for renderer:
+- [x] Maybe make the following directory structure for renderer:
+```
     renderer/
+        renderer.odin
         mesh/
             mesh2d.odin
             triagnle_mesh.odin
             quad_mesh.odin
-        draw/
+
+        draw/               // Dropped draw dir since it uses the renderer avoids ciruclar dep
             player.odin
             trees.odin
             etc...
-        renderer.odin
-
-# TO LEARN
-- [ ] nice looking pixel art particles
+```
 
 
-# GAME DESIGN
+# GAME DESIGN **TODO: (Make a different md file for game design doc)**
 
-- TERRARIA INSPIRED BY TOP-DOWN
-- 2d pixel art style
-- Tilemap based desgin.
-- Tiles blend smoothly FOR EXAMPLE: cakez's game Tangy TD
-- Infinitly procedurally generated world
-- Weapons have special effects like burn, bleed
-- Combat and weapons derive the game + maybe a building system
+- **CORE GAMELOOP: Combat, weapons drops, loot, dungeon explore, GOAL: kill demon king**
+- World inspired by Terraria
+    - World gets generated once using procedural noise techniques *multiple passes* and saved to file
+    - Hand drawn structures are placed via procedural generation
+    - 3 Major continents (Human, elf & Demon) each level rising with difficulty
+    - Around 50 weapons
+        - Only 5 to 10 different weapon classes
+        - Rest approx 40 Weapons have special effects like burn, bleed
+- Art direction
+    - 2d topdown pixel art style
+    - No outline characters and items (for eg: *Terrafactor* by Randy)
+    - Tilemap tiles blend smoothly (for eg: *Tangy TD* by cakez's game )
 
-# ART STYLE (PIXEL ART)
 
-- [ ] Draw a basic character (no outline style, like randy)
-
-# File Folder structure (temporary, yoinked from chatGPT)
+# File Folder structure
 
 ```
+assets/
+    texture/
 src/
-  main.odin
-  app/
-      app.odin
-  game/
-      game.odin
-    world/
-        world.odin
-        tilemap.odin
-    entities/
+    main.odin
+    app/
+        app.odin
+    game/
+        game.odin
         player.odin
         enemy.odin
-        bullet.odin
-  renderer/
-      renderer.odin
-      sprite_renderer.odin
-      texture.odin
-  assets/
-      loader.odin
-      atlas.odin
-  input/
-      input.odin
+        world/
+            world.odin
+            tilemap.odin
+    input/
+        input.odin
+    renderer/
+        mesh/
+        renderer.odin
+        texture.odin
+    shaders/
+        default.glsl
+    utils/
+        constant.odin
+        core.odin
 ```
 
+# Modules dependency graph (follows seperation of concerns)
+
+APP ---Ownes--> Game
+APP ---Ownes--> Renderer
+APP ---Ownes--> Input
+
+utils ---Read only access---> Renderer, Game, Input, *all
+Game ---Read only access---> Renderer
+Input ---Read only access---> Game

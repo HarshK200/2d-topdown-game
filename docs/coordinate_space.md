@@ -1,4 +1,4 @@
-# This is how Y coordinate is transformed
+# Y coordinate transformation convention used by this game's renderer
 
 Local Space (Y+ "Down")
     │ Model Matrix
@@ -7,7 +7,7 @@ World Space (Y+ "Down")
     │ View Matrix
     ▼
 View (Camera) Space (Y+ "Down")
-    │ Projection Matrix (FLIPS Y+ by doing Y Scale = -1)
+    │ Projection Matrix (FLIPS Y+ "Down" to Y+ "Up" by doing Y Scale = -1)
     ▼
 Clip Space (Y+ "Up")
     │ Perspective Divide (GPU)

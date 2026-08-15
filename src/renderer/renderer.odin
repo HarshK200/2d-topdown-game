@@ -68,11 +68,11 @@ Init :: proc(renderer: ^Renderer) {
 		"PlayerSprite",
 		decode_and_upload_tex(utils.load_image_file("./assets/textures/player_sprite.png")),
 	)
-	map_insert(
-		&renderer.textures,
-		"GrassTile",
-		decode_and_upload_tex(utils.load_image_file("./assets/textures/single_grass_tile.png")),
-	)
+	// map_insert(
+	// 	&renderer.textures,
+	// 	"GrassTileMap",
+	// 	decode_and_upload_tex(utils.load_image_file("./assets/textures/DualGridTilemap.png")),
+	// )
 }
 
 Update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
