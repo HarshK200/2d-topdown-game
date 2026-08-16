@@ -19,7 +19,7 @@ Tile :: struct {
 }
 
 Chunk :: struct {
-	tiles: [16][16]Tile, // 2d array of 16x16 tiles
+	tiles: [CHUNK_SIZE][CHUNK_SIZE]Tile, // 2d array of CHUNK_SIZExCHUNK_SIZE tiles
 }
 
 // all the chunk data is store in memory once but render only the closes chunks
@@ -28,6 +28,13 @@ World :: struct {
 }
 
 // Generates the game world using noise and populates the passed in world's chunks map
+//
+// NOTE: no need to call load_world after generate as it populates the world passed in,
+// But you do have to save the generated world to a file, this function doesn't do seralization
+generate_world :: proc(w: ^World) {
+}
+
+// load the game world from file and populates the passed in world's chunks map
 load_world :: proc(w: ^World) {
 	logger.info("Loading game world")
 
@@ -362,18 +369,17 @@ world_to_chunk_coords :: proc(world_coords: gmath.vec2) -> gmath.vec2i {
 }
 
 // converts world space coordinates to tile space coordinates and return
-world_to_tile_coords :: proc(world_coords: gmath.vec2) -> gmath.vec2 {
-	return gmath.Floor(world_coords / TILE_SIZE)
+world_to_tile_coords :: proc(world_coords: gmath.vec2) -> gmath.vec2i {
+	result := gmath.Floor(world_coords / TILE_SIZE)
+	return {i32(result.x), i32(result.y)}
 }
 
 // takes in a tile_idx and chunk_coords of chunk the tile belongs to and retuns the world coordinates
-//
-// NOTE: tile_idx follows (row, column) format
+// NOTE: tile_idx x is left to right and y is top to down, following Y+ Down convention
 tile_world_coords :: proc(tile_idx: gmath.vec2i, chunk_coords: gmath.vec2i) -> gmath.vec2 {
 	world_coords: gmath.vec2
-	// NOTE TO SELF: tile_idx.y and tile_idx.x are correct they are flipped because (row, column) format is used
-	world_coords.x = ((f32(chunk_coords.x) * CHUNK_SIZE) + f32(tile_idx.y)) * TILE_SIZE
-	world_coords.y = ((f32(chunk_coords.y) * CHUNK_SIZE) + f32(tile_idx.x)) * TILE_SIZE
+	world_coords.x = ((f32(chunk_coords.x) * CHUNK_SIZE) + f32(tile_idx.x)) * TILE_SIZE
+	world_coords.y = ((f32(chunk_coords.y) * CHUNK_SIZE) + f32(tile_idx.y)) * TILE_SIZE
 
 	return world_coords
 }

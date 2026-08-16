@@ -38,8 +38,8 @@ draw_world :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 		chunk := &g.world.chunks[coords]
 		assert(coords in g.world.chunks) // coords must exist in the world chunk array due to previous check
 
-		for &tile_row, idx_x in chunk.tiles {
-			for &tile, idx_y in tile_row {
+		for &tile_row, idx_y in chunk.tiles {
+			for &tile, idx_x in tile_row {
 				draw_tile(renderer, &tile, {i32(idx_x), i32(idx_y)}, coords)
 			}
 		}
