@@ -8,32 +8,51 @@ import shaders "topdown_game:src/shaders/build"
 import sg "topdown_game:third_party/sokol/gfx"
 
 draw_world :: proc(renderer: ^Renderer, g: ^game.Game2D) {
+
+	// ============================== CHUNK RENDERING ==============================
+
 	// player chunk coordinates
 	player_chunk_coords := game.world_to_chunk_coords(g.player.position)
 
-    // ============================== CHUNK RENDERING ==============================
 	// get the chunks around the player with 1 chunk radius and only render those
-	chunks_around_player: [dynamic]game.Chunk // draw chunks, 4 chunks near player
-	neighbour_chunk: [9]gmath.vec2i = {{0, 0}, {0, -1}, {-1, -1}, {-1, 0}, {1, 0}, {1, -1}, {0, 1}, {1, 1}, {-1, 1}}
+	chunks_coords_around_player: [dynamic]gmath.vec2i // draw chunks, 8 chunks around the player + 1 chunk below player
+	neighbour_chunk: [9]gmath.vec2i = {
+		{0, 0},
+		{0, -1},
+		{-1, -1},
+		{-1, 0},
+		{1, 0},
+		{1, -1},
+		{0, 1},
+		{1, 1},
+		{-1, 1},
+	}
 	for n, i in neighbour_chunk {
-		chunk_coords, ok := g.world.chunks[player_chunk_coords + n]
-		if !ok {
+		chunk_coords := player_chunk_coords + n
+		if chunk_coords not_in g.world.chunks {
 			continue
 		}
-		append(&chunks_around_player, chunk_coords)
+		append(&chunks_coords_around_player, chunk_coords)
 	}
-	for &chunk in chunks_around_player {
+	for coords in chunks_coords_around_player {
+		chunk := &g.world.chunks[coords]
+		assert(coords in g.world.chunks) // coords must exist in the world chunk array due to previous check
+
 		for &tile_row, idx_x in chunk.tiles {
-			// draw a single tile
 			for &tile, idx_y in tile_row {
-				draw_tile(renderer, &tile, {f32(idx_x), f32(idx_y)})
+				draw_tile(renderer, &tile, {i32(idx_x), i32(idx_y)}, coords)
 			}
 		}
 	}
 }
 
-draw_tile :: proc(renderer: ^Renderer, tile: ^game.Tile, tile_idx: gmath.vec2) {
-	tile_world_pos := game.tile_world_coords(tile_idx, tile.chunk_coords)
+draw_tile :: proc(
+	renderer: ^Renderer,
+	tile: ^game.Tile,
+	tile_idx: gmath.vec2i,
+	chunk_coords: gmath.vec2i,
+) {
+	tile_world_pos := game.tile_world_coords(tile_idx, chunk_coords)
 
 	model :=
 		gmath.Translate_Mat4({tile_world_pos.x, tile_world_pos.y, 0.0}) *
