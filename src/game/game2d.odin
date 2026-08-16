@@ -6,7 +6,6 @@ Game2D :: struct {
 	player: Player,
 	camera: Camera2D,
 
-	// TESTING
 	world:  World, // gets loaded in the game.Init()
 }
 
@@ -19,6 +18,7 @@ Init :: proc(g: ^Game2D) {
 
 Update :: proc(g: ^Game2D, im: ^input.InputManager) {
 	update_player(g, im)
+	update_camera(g)
 }
 
 

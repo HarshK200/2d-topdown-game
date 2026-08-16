@@ -12,10 +12,16 @@ Camera2D :: struct {
 }
 
 init_camera :: proc(g: ^Game2D) {
-	g.camera.position = {0.0, 0.0} // centering the camera on player i.e. at (0, 0) i.e. topleft
+	g.camera.position = {-320.0, -180.0} // centering the camera on player i.e. at (0, 0) i.e. topleft
 	// TODO: check if it is fine to have -1 and 1 as near/far values when using D3D11
 	g.camera.near = -1
 	g.camera.far = 1
+}
+
+update_camera :: proc(g: ^Game2D) {
+	g.camera.position = g.player.position
+    g.camera.position.x -= 320.0
+    g.camera.position.y -= 180.0
 }
 
 /*

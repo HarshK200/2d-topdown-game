@@ -28,7 +28,7 @@ draw_player :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 	uv_min.y /= f32(player_tex.height)
 
 	// normalized 0..1 player uv max to be sampled from the texture
-	uv_max := player_tex_coords + g.player.scale
+	uv_max := player_tex_coords + (g.player.scale - 1) // NOTE: offset by 1 px because of 0 indexed
 	uv_max.x /= f32(player_tex.width)
 	uv_max.y /= f32(player_tex.height)
 
@@ -43,7 +43,7 @@ draw_player :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 	)
 
 	// set the player view i.e. texture in the bindings of quad_mesh before draw call
-	renderer.quad_mesh.bindings.views[0] = renderer.textures[g.player.sprite.texture_id].sg_view
+	renderer.quad_mesh.bindings.views[0] = player_tex.sg_view
 
 	mesh.draw_mesh(&renderer.quad_mesh, 1)
 }

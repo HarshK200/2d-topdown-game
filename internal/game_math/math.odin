@@ -7,9 +7,14 @@ vec4 :: [4]f32
 mat4 :: matrix[4, 4]f32 // column major by default i.e. stores column1, column2 in sequence memory
 vec2i :: [2]i32
 
-// normalizesis a vector
+// normalize a vector
 Normalize :: proc {
 	normalize_vec2,
+}
+
+// floor
+Floor :: proc {
+	floor_vec2,
 }
 
 // normalizes a vec2
@@ -22,6 +27,16 @@ normalize_vec2 :: proc(v: vec2) -> vec2 {
 	}
 	normalized := v / vec_len
 	return normalized
+}
+
+// floor a vec2
+@(private)
+floor_vec2 :: proc(v: vec2) -> vec2 {
+	result: vec2
+	result.x = math.floor(v.x)
+	result.y = math.floor(v.y)
+
+	return result
 }
 
 /* returns an 4x4 identity matrix
