@@ -14,7 +14,7 @@ draw_world :: proc(renderer: ^Renderer, g: ^game.Game2D) {
     // ============================== CHUNK RENDERING ==============================
 	// get the chunks around the player with 1 chunk radius and only render those
 	chunks_around_player: [dynamic]game.Chunk // draw chunks, 4 chunks near player
-	neighbour_chunk: [9]gmath.vec2 = {{0, 0}, {0, -1}, {-1, -1}, {-1, 0}, {1, 0}, {1, -1}, {0, 1}, {1, 1}, {-1, 1}}
+	neighbour_chunk: [9]gmath.vec2i = {{0, 0}, {0, -1}, {-1, -1}, {-1, 0}, {1, 0}, {1, -1}, {0, 1}, {1, 1}, {-1, 1}}
 	for n, i in neighbour_chunk {
 		chunk_coords, ok := g.world.chunks[player_chunk_coords + n]
 		if !ok {

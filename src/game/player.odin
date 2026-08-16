@@ -23,6 +23,7 @@ init_player :: proc(g: ^Game2D) {
 	}
 }
 
+// TODO: pass delta time
 update_player :: proc(g: ^Game2D, im: ^input.InputManager) {
 	input_dir := calculate_input_dir(im)
 

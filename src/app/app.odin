@@ -75,6 +75,7 @@ _input_cb :: proc "c" (event: ^sapp.Event) {
 	}
 }
 
+// TODO: pass delta time
 @(private)
 _frame_cb :: proc "c" () {
 	context = APP.Context

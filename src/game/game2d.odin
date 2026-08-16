@@ -16,6 +16,7 @@ Init :: proc(g: ^Game2D) {
 	load_world(&g.world)
 }
 
+// TODO: pass delta time
 Update :: proc(g: ^Game2D, im: ^input.InputManager) {
 	update_player(g, im)
 	update_camera(g)

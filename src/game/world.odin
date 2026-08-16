@@ -25,7 +25,7 @@ Chunk :: struct {
 
 // all the chunk data is store in memory once but render only the closes chunks
 World :: struct {
-	chunks: map[gmath.vec2]Chunk, // ChunkCoordinate -> Chunk e.g. gmath.vec2{3, 4} -> Chunk
+	chunks: map[gmath.vec2i]Chunk, // ChunkCoordinate -> Chunk e.g. gmath.vec2{3, 4} -> Chunk
 }
 
 // Generates the game world using noise and populates the passed in world's chunks map
@@ -41,7 +41,7 @@ load_world :: proc(w: ^World) {
 
 
 	// TESTING (populating world with random chunk data, only one chunk at (0, 0))
-    // TODO: use noise to generate world instead
+	// TODO: use noise to generate world instead
     // odinfmt: disable
 	w.chunks[{0, 0}] = {
 		tiles = {
@@ -357,9 +357,9 @@ load_world :: proc(w: ^World) {
 // converts world space coordinates to chunk space coordinates and returns
 //
 // NOTE: world coords are 1 unit = 1 pixel
-world_to_chunk_coords :: proc(world_coords: gmath.vec2) -> gmath.vec2 {
+world_to_chunk_coords :: proc(world_coords: gmath.vec2) -> gmath.vec2i {
 	result := gmath.Floor(world_coords / (CHUNK_SIZE * TILE_SIZE))
-	return result
+	return {i32(result.x), i32(result.y)}
 }
 
 // converts world space coordinates to tile space coordinates and return

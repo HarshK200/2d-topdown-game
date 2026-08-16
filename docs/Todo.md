@@ -1,8 +1,9 @@
 # TODO CORE
 
+- [ ] BUG FIX: the player movement speed changes based on fps fix that with delta time
+    - [ ] Implement delta time
 - [ ] LEARN: how to effeciently manage textures NOTE: watch cakez video on texture atlas or handmade hero
-- [ ] Tilemap system
-- [ ] Chunk loading
+- [ ] DualGrid Tilemap system
 - [ ] Rotation matrix
 - [ ] Text rendering
 - [ ] Audio processing
@@ -50,6 +51,7 @@
   - [x] Sample texture onto player's quad_mesh
   - [x] Create input controller and handle input *use sokol's sapp input callback input*
   - [x] Make the player rect move with realtime input
+- [x] Chunk loading
 
 
 

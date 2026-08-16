@@ -18,6 +18,7 @@ init_camera :: proc(g: ^Game2D) {
 	g.camera.far = 1
 }
 
+// TODO: pass delta time
 update_camera :: proc(g: ^Game2D) {
 	g.camera.position = g.player.position
     g.camera.position.x -= 320.0
