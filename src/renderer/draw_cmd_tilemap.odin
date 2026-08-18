@@ -92,7 +92,7 @@ append_draw_cmd_tile :: proc(
 	draw_cmd: DrawCommand = {
 		pos          = tile_world_pos, // not required to specify position since no Y sorting needed, i just put it cause i had it
 		texture_id   = tile_tex.texture_id,
-		entityParams = entity_params,
+		entity_params = entity_params,
 	}
 
 	append(&renderer.draw_queue, draw_cmd)

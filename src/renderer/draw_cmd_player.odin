@@ -40,7 +40,7 @@ push_player_drawcmd :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 	draw_cmd: DrawCommand = {
 		pos          = g.player.position,
 		texture_id   = player_tex.texture_id,
-		entityParams = entity_params,
+		entity_params = entity_params,
 	}
 
 	append(&renderer.draw_queue, draw_cmd)

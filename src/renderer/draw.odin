@@ -9,7 +9,7 @@ import sg "topdown_game:third_party/sokol/gfx"
 DrawCommand :: struct {
 	pos:          gmath.vec2,
 	texture_id:   string,
-	entityParams: shaders.Entity_Params,
+	entity_params: shaders.Entity_Params,
 }
 
 // Draws all the accumulated draw commands in the draw queue for a layer,
@@ -30,7 +30,7 @@ DrawLayer :: proc(renderer: ^Renderer, ignore_sorting: bool) {
 
 		sg.apply_uniforms(
 			shaders.UB_entity_params,
-			{ptr = &draw_cmd.entityParams, size = size_of(draw_cmd.entityParams)},
+			{ptr = &draw_cmd.entity_params, size = size_of(draw_cmd.entity_params)},
 		)
 
 		// make the draw call
