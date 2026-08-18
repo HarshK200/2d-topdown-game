@@ -1,0 +1,42 @@
+package renderer
+
+import "core:slice"
+import gmath "topdown_game:internal/game_math"
+import shaders "topdown_game:src/shaders/build"
+import sg "topdown_game:third_party/sokol/gfx"
+
+
+DrawCommand :: struct {
+	pos:          gmath.vec2,
+	texture_id:   string,
+	entityParams: shaders.Entity_Params,
+}
+
+// Draws all the accumulated draw commands in the draw queue for a layer,
+// Ignores Y sorting on this layers draws if ignore_sorting is true
+//
+// NOTE: Y sorting is done on Y+ Down convention
+DrawLayer :: proc(renderer: ^Renderer, ignore_sorting: bool) {
+	// Y sorting
+	if !ignore_sorting {
+		slice.sort_by(renderer.draw_queue[:], proc(a, b: DrawCommand) -> bool {
+			return a.pos.y < b.pos.y
+		})
+	}
+
+	// render sorted draw_queue
+	for i in 0 ..< len(renderer.draw_queue) {
+		draw_cmd := renderer.draw_queue[i]
+
+		sg.apply_uniforms(
+			shaders.UB_entity_params,
+			{ptr = &draw_cmd.entityParams, size = size_of(draw_cmd.entityParams)},
+		)
+
+		// make the draw call
+		mesh := renderer.quad_mesh
+		mesh.bindings.views[0] = renderer.textures[draw_cmd.texture_id].sg_view
+		sg.apply_bindings(mesh.bindings)
+		sg.draw(mesh.base_element, mesh.num_elements, 1)
+	}
+}

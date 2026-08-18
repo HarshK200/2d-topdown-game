@@ -1,17 +1,15 @@
 package renderer
 
-import gmath "topdown_game:internal/game_math"
 import "topdown_game:internal/logger"
 import "topdown_game:src/game"
-import "topdown_game:src/renderer/mesh"
-import shaders "topdown_game:src/shaders/build"
-import sg "topdown_game:third_party/sokol/gfx"
 
-draw_world :: proc(renderer: ^Renderer, g: ^game.Game2D) {
+import gmath "topdown_game:internal/game_math"
+import shaders "topdown_game:src/shaders/build"
+
+
+append_draw_cmd_tilemap :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 
 	// ============================== CHUNK RENDERING ==============================
-
-	// player chunk coordinates
 	player_chunk_coords := game.world_to_chunk_coords(g.player.position)
 
 	// get the chunks around the player with 1 chunk radius and only render those
@@ -27,6 +25,7 @@ draw_world :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 		{1, 1},
 		{-1, 1},
 	}
+	reserve(&chunks_coords_around_player, len(neighbour_chunk))
 	for n, i in neighbour_chunk {
 		chunk_coords := player_chunk_coords + n
 		if chunk_coords not_in g.world.chunks {
@@ -34,19 +33,26 @@ draw_world :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 		}
 		append(&chunks_coords_around_player, chunk_coords)
 	}
+
+	// pre allocate space for draw commands
+	required_draw_calls := len(chunks_coords_around_player) * game.CHUNK_SIZE * game.CHUNK_SIZE
+	reserve(&renderer.draw_queue, len(renderer.draw_queue) + required_draw_calls)
+
 	for coords in chunks_coords_around_player {
 		chunk := &g.world.chunks[coords]
 		assert(coords in g.world.chunks) // coords must exist in the world chunk array due to previous check
 
 		for &tile_row, idx_y in chunk.tiles {
 			for &tile, idx_x in tile_row {
-				draw_tile(renderer, &tile, {i32(idx_x), i32(idx_y)}, coords)
+				append_draw_cmd_tile(renderer, &tile, {i32(idx_x), i32(idx_y)}, coords)
 			}
 		}
 	}
+
 }
 
-draw_tile :: proc(
+@(private = "file")
+append_draw_cmd_tile :: proc(
 	renderer: ^Renderer,
 	tile: ^game.Tile,
 	tile_idx: gmath.vec2i,
@@ -83,12 +89,11 @@ draw_tile :: proc(
 		UV_MAX = uv_max,
 	}
 
-	sg.apply_uniforms(
-		shaders.UB_entity_params,
-		{ptr = &entity_params, size = size_of(entity_params)},
-	)
+	draw_cmd: DrawCommand = {
+		pos          = tile_world_pos, // not required to specify position since no Y sorting needed, i just put it cause i had it
+		texture_id   = tile_tex.texture_id,
+		entityParams = entity_params,
+	}
 
-	renderer.quad_mesh.bindings.views[0] = tile_tex.sg_view
-
-	mesh.draw_mesh(&renderer.quad_mesh, 1)
+	append(&renderer.draw_queue, draw_cmd)
 }

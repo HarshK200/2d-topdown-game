@@ -46,6 +46,12 @@ out vec4 out_color;
 
 void main() {
     vec4 tex_color = texture(sampler2D(fs_tex, fs_smp), uv);
+    // discard completely trasparent values
+    if (tex_color.a < 0.001) {
+        discard;
+    }
+
+    // TODO: just mulitply the tex_color.a with opacity. get opacity from vertex data
     out_color = tex_color;
 }
 @end

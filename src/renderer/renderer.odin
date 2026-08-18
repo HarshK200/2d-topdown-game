@@ -1,27 +1,26 @@
 package renderer
 
-import gmath "topdown_game:internal/game_math"
 import "topdown_game:internal/logger"
-import game "topdown_game:src/game"
+import "topdown_game:src/game"
 import "topdown_game:src/renderer/mesh"
 import "topdown_game:src/utils"
-import stbi "vendor:stb/image"
 
+import gmath "topdown_game:internal/game_math"
 import shaders "topdown_game:src/shaders/build"
 import sg "topdown_game:third_party/sokol/gfx"
 import sglue "topdown_game:third_party/sokol/glue"
 import slog "topdown_game:third_party/sokol/log"
 
+
 Renderer :: struct {
 	default_pipeline:    sg.Pipeline,
 	default_pass_action: sg.Pass_Action,
+	textures:            map[string]Texture2D,
+	draw_queue:          [dynamic]DrawCommand,
 
 	// premitive 2d meshs
 	triangle_mesh:       mesh.Mesh2D,
 	quad_mesh:           mesh.Mesh2D,
-
-	// textures
-	textures:            map[string]Texture2D,
 }
 
 Init :: proc(renderer: ^Renderer) {
@@ -61,18 +60,7 @@ Init :: proc(renderer: ^Renderer) {
 
 
 	// loading textures
-	reserve(&renderer.textures, 2)
-
-	map_insert(
-		&renderer.textures,
-		"PlayerSprite",
-		decode_and_upload_tex(utils.load_image_file("./assets/textures/player_sprite.png")),
-	)
-	map_insert(
-		&renderer.textures,
-		"GrassTileMap",
-		decode_and_upload_tex(utils.load_image_file("./assets/textures/DualGridTilemap.png")),
-	)
+	load_all_textures(renderer)
 }
 
 Update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
@@ -95,9 +83,15 @@ Update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 	sg.apply_uniforms(shaders.UB_frame_params, {ptr = &frame_params, size = size_of(frame_params)})
 
 
-	// actual drawing
-	draw_player(renderer, g)
-	draw_world(renderer, g)
+	// ====================== Drawing Layer 1 ======================
+	append_draw_cmd_tilemap(renderer, g)
+	DrawLayer(renderer, true)
+	clear(&renderer.draw_queue)
+
+	// ====================== Drawing Layer 2 ======================
+	append_draw_cmd_player(renderer, g)
+	DrawLayer(renderer, true)
+	clear(&renderer.draw_queue)
 
 
 	sg.end_pass()
@@ -109,45 +103,4 @@ Cleanup :: proc(renderer: ^Renderer) {
 	mesh.destroy_mesh(&renderer.quad_mesh)
 
 	sg.shutdown()
-}
-
-@(private)
-// decodes image using stbi and uploads it to the gpu, returns Texture2D
-decode_and_upload_tex :: proc(img_data: []byte) -> Texture2D {
-	width, height, channels_in_file: i32
-	// 4 desired channels as GPU expects 4 channels
-	pixel_data := stbi.load_from_memory(
-		raw_data(img_data),
-		i32(len(img_data)),
-		&width,
-		&height,
-		&channels_in_file,
-		4,
-	)
-	if pixel_data == nil {
-		logger.error("Error decoding pixel data")
-	}
-
-	// NOTE: size is (w * h * 4) because for each pixel there are 4 bytes of data i.e. RGBA
-	img_handle := sg.make_image(
-		{
-			width = width,
-			height = height,
-			pixel_format = .RGBA8,
-			data = {mip_levels = {0 = {ptr = pixel_data, size = uint(width * height * 4)}}},
-		},
-	)
-
-	// cleanup stbi created pixel_data
-	stbi.image_free(pixel_data)
-
-	view_handle := sg.make_view({texture = {image = img_handle}})
-
-	return {
-		sg_img = img_handle,
-		sg_view = view_handle,
-		width = width,
-		height = height,
-		channels = channels_in_file,
-	}
 }
