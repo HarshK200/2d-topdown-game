@@ -6,7 +6,7 @@ import "topdown_game:src/game"
 import gmath "topdown_game:internal/game_math"
 import shaders "topdown_game:src/shaders/build"
 
-append_draw_cmd_player :: proc(renderer: ^Renderer, g: ^game.Game2D) {
+push_player_drawcmd :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 	model :=
 		gmath.Translate_Mat4({g.player.position.x, g.player.position.y, 0.0}) *
 		gmath.Scale_Mat4({g.player.scale.x, g.player.scale.y, 1.0})

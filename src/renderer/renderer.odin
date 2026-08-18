@@ -84,12 +84,12 @@ Update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 
 
 	// ====================== Drawing Layer 1 ======================
-	append_draw_cmd_tilemap(renderer, g)
+	push_tilemap_drawcmd(renderer, g)
 	DrawLayer(renderer, true)
 	clear(&renderer.draw_queue)
 
 	// ====================== Drawing Layer 2 ======================
-	append_draw_cmd_player(renderer, g)
+	push_player_drawcmd(renderer, g)
 	DrawLayer(renderer, true)
 	clear(&renderer.draw_queue)
 

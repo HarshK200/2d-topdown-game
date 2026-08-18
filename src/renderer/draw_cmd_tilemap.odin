@@ -7,7 +7,7 @@ import gmath "topdown_game:internal/game_math"
 import shaders "topdown_game:src/shaders/build"
 
 
-append_draw_cmd_tilemap :: proc(renderer: ^Renderer, g: ^game.Game2D) {
+push_tilemap_drawcmd :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 
 	// ============================== CHUNK RENDERING ==============================
 	player_chunk_coords := game.world_to_chunk_coords(g.player.position)
