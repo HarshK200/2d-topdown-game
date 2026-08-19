@@ -1,7 +1,6 @@
 # TODO CORE
 
-- [ ] BUG FIX: the player movement speed changes based on fps fix that with delta time
-    - [ ] Implement delta time
+- [ ] Test Y sorting
 - [ ] LEARN: how to effeciently manage textures NOTE: watch cakez video on texture atlas or handmade hero
 - [ ] DualGrid Tilemap system
 - [ ] Rotation matrix
@@ -18,9 +17,6 @@
 
 # DOING:
 - [ ] Procedural world generation
-    - [x] Figure out how to divide world into chunks *its basically just entity_chunk_coordinate = world_pos.xy/chunk_size.xy*
-    - [ ] Tilemap system
-    - [ ] Chunk loading
 
 # DONE:
 - [x] figure out how to setup sokol
@@ -51,8 +47,12 @@
   - [x] Sample texture onto player's quad_mesh
   - [x] Create input controller and handle input *use sokol's sapp input callback input*
   - [x] Make the player rect move with realtime input
+- [x] Figure out how to divide world into chunks *its basically just entity_chunk_coordinate = world_pos.xy/chunk_size.xy and store chunk data in a hashmap*
 - [x] Chunk loading
-
+- [x] Super basic barebones Tilemap system
+- [x] Painters algorithm layer drawing and Y sorting, draw in order by layers and Y sorting each layer
+- [x] Implement delta time
+    - [x] BUG FIX: the player movement speed changes based on fps fix that with delta time
 
 
 # EXPERIMENT:

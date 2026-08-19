@@ -5,7 +5,6 @@ import "topdown_game:src/input"
 Game2D :: struct {
 	player: Player,
 	camera: Camera2D,
-
 	world:  World, // gets loaded in the game.Init()
 }
 
@@ -16,9 +15,8 @@ Init :: proc(g: ^Game2D) {
 	load_world(&g.world)
 }
 
-// TODO: pass delta time
-Update :: proc(g: ^Game2D, im: ^input.InputManager) {
-	update_player(g, im)
+Update :: proc(g: ^Game2D, im: ^input.InputManager, dt: f32) {
+	update_player(g, im, dt)
 	update_camera(g)
 }
 

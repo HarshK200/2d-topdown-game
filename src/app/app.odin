@@ -75,12 +75,13 @@ _input_cb :: proc "c" (event: ^sapp.Event) {
 	}
 }
 
-// TODO: pass delta time
 @(private)
 _frame_cb :: proc "c" () {
 	context = APP.Context
+	dt := f32(sapp.frame_duration())
+	dt = min(dt, utils.MAX_DELTA_TIME)
 
-	game.Update(&APP.Game, &APP.InputManager)
+	game.Update(&APP.Game, &APP.InputManager, dt)
 	renderer.Update(&APP.Renderer, &APP.Game)
 
 	// per-frame cleanup

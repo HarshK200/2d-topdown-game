@@ -15,7 +15,7 @@ Player :: struct {
 init_player :: proc(g: ^Game2D) {
 	g.player.position = {0.0, 0.0}
 	g.player.scale = {32, 48}
-	g.player.speed = 1.0
+	g.player.speed = 100.0
 
 	g.player.sprite = {
 		texture_id   = "PlayerSprite",
@@ -23,12 +23,9 @@ init_player :: proc(g: ^Game2D) {
 	}
 }
 
-// TODO: pass delta time
-update_player :: proc(g: ^Game2D, im: ^input.InputManager) {
+update_player :: proc(g: ^Game2D, im: ^input.InputManager, dt: f32) {
 	input_dir := calculate_input_dir(im)
-
-	// TODO: make this frame rate independent i.e. calculate delta i.e. frame time
-	new_pos := g.player.position.xy + (input_dir.xy * g.player.speed)
+	new_pos := g.player.position + (input_dir * g.player.speed * dt)
 
 	g.player.position = new_pos
 }
