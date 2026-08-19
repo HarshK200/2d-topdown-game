@@ -3,28 +3,26 @@ package game
 import gmath "topdown_game:internal/game_math"
 import "topdown_game:internal/logger"
 
+
+// all the chunk data is store in memory once but render only the closes chunks
+World :: struct {
+	chunks: map[gmath.vec2i]Chunk, // ChunkCoordinate -> Chunk e.g. gmath.vec2{3, 4} -> Chunk
+}
+
 TILE_SIZE :: 16 // 16x16 pixels
 CHUNK_SIZE :: 16 // 16x16 tiles
-
 TileType :: enum {
 	GRASS,
 	DIRT,
 	WATER,
 }
-
 Tile :: struct {
 	tile_type: TileType, // GRASS, DIRT, WATER
 	scale:     gmath.vec2,
 	sprite2d:  Sprite2D, // which texture should be used for this tile
 }
-
 Chunk :: struct {
 	tiles: [CHUNK_SIZE][CHUNK_SIZE]Tile, // 2d array of CHUNK_SIZExCHUNK_SIZE tiles
-}
-
-// all the chunk data is store in memory once but render only the closes chunks
-World :: struct {
-	chunks: map[gmath.vec2i]Chunk, // ChunkCoordinate -> Chunk e.g. gmath.vec2{3, 4} -> Chunk
 }
 
 // Generates the game world using noise and populates the passed in world's chunks map

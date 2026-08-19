@@ -49,6 +49,7 @@ run :: proc() {
 			window_title = "2d-topdown-game",
 			icon = {sokol_default = true},
 			logger = {func = slog.func},
+			disable_vsync = true,
 		},
 	)
 }

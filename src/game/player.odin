@@ -15,7 +15,7 @@ Player :: struct {
 init_player :: proc(g: ^Game2D) {
 	g.player.position = {0.0, 0.0}
 	g.player.scale = {32, 48}
-	g.player.speed = 100.0
+	g.player.speed = 120.0
 
 	g.player.sprite = {
 		texture_id   = "PlayerSprite",

@@ -44,7 +44,7 @@ push_tilemap_drawcmd :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 
 		for &tile_row, idx_y in chunk.tiles {
 			for &tile, idx_x in tile_row {
-				append_draw_cmd_tile(renderer, &tile, {i32(idx_x), i32(idx_y)}, coords)
+				push_draw_cmd_tile(renderer, &tile, {i32(idx_x), i32(idx_y)}, coords)
 			}
 		}
 	}
@@ -52,7 +52,7 @@ push_tilemap_drawcmd :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 }
 
 @(private = "file")
-append_draw_cmd_tile :: proc(
+push_draw_cmd_tile :: proc(
 	renderer: ^Renderer,
 	tile: ^game.Tile,
 	tile_idx: gmath.vec2i,

@@ -34,6 +34,8 @@ make_triangle_mesh :: proc() -> Mesh2D {
 			data = {ptr = &indices, size = size_of(indices)},
 		},
 	)
+	// default sampler
+	triangle_mesh.bindings.samplers[0] = sg.make_sampler({})
 
 	return triangle_mesh
 }

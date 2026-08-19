@@ -25,24 +25,23 @@ Renderer :: struct {
 }
 
 Init :: proc(renderer: ^Renderer) {
-	logger.info("Initializing renderer...")
-
-	// setup device sokol sfx environment for platform specific graphics API like DirectX, OpenGL, etc
+	// ====================== Setup Sokol gfx and debug text ======================
 	sg.setup({environment = sglue.environment(), logger = {func = slog.func}})
-	logger.infof("Backend: %v", sg.query_backend())
-
-	// setup sokol debug text
 	sdtx.setup({fonts = {0 = sdtx.font_kc853()}, logger = {func = slog.func}})
+	logger.infof("Graphics Backend: %v", sg.query_backend())
 
-	// pass action to clear framebuffer to black
+
+	// ====================== Pass Actions ======================
 	renderer.default_pass_action = {
 		colors = {0 = {load_action = .CLEAR, clear_value = {r = 0.0, g = 0.0, b = 0.0, a = 1.0}}},
 	}
 
-	// compile shaders
+
+	// ====================== Make Shaders ======================
 	default_shader := sg.make_shader(shaders.default_shader_desc(sg.query_backend()))
 
-	// make pipeline (for index buffer)
+
+	// ====================== Make Pipelines ======================
 	renderer.default_pipeline = sg.make_pipeline(
 		{
 			shader = default_shader,
@@ -58,20 +57,20 @@ Init :: proc(renderer: ^Renderer) {
 	)
 
 
-	// primitives setup
+	// ====================== Upload premitive mesh data ======================
 	renderer.triangle_mesh = mesh.make_triangle_mesh()
 	renderer.quad_mesh = mesh.make_quad_mesh()
 
 
-	// loading textures
+	// ====================== Load textures ======================
 	load_all_textures(renderer)
 }
 
 Update :: proc(renderer: ^Renderer, g: ^game.Game2D, current_fps: u32) {
 	sg.begin_pass({action = renderer.default_pass_action, swapchain = sglue.swapchain()})
-	sg.apply_pipeline(renderer.default_pipeline)
 
-	// uniforms set per frame
+
+	// ====================== Per Frame Calculations ======================
 	frame_params := shaders.Frame_Params {
 		VIEW       = game.view_matrix_from_camera2d(&g.camera),
 		// FOLLOWS Y+ "Down" CONVENTION
@@ -84,25 +83,31 @@ Update :: proc(renderer: ^Renderer, g: ^game.Game2D, current_fps: u32) {
 			g.camera.far,
 		),
 	}
+
+
+	// ====================== Default Shader Pipeline ========================
+	sg.apply_pipeline(renderer.default_pipeline)
 	sg.apply_uniforms(shaders.UB_frame_params, {ptr = &frame_params, size = size_of(frame_params)})
 
-
-	// ====================== Drawing Layer 1 ======================
+	// Drawing Layer 1
 	push_tilemap_drawcmd(renderer, g)
 	DrawLayer(renderer, true)
 	clear(&renderer.draw_queue)
 
-	// ====================== Drawing Layer 2 ======================
+	// Drawing Layer 2
 	push_player_drawcmd(renderer, g)
 	DrawLayer(renderer, true)
 	clear(&renderer.draw_queue)
 
+
 	// ====================== Debug Overlay ========================
 	sdtx.canvas(f32(utils.DEFAULT_WINDOW_WIDTH) * 0.5, f32(utils.DEFAULT_WINDOW_HEIGHT) * 0.5)
 	sdtx.origin(1, 1)
-	sdtx.color3b(0, 255, 0)
+	sdtx.color3b(246, 114, 128)
+	// debug info draws
 	sdtx.printf("fps: %d", current_fps)
 	sdtx.draw()
+
 
 	sg.end_pass()
 	sg.commit()
