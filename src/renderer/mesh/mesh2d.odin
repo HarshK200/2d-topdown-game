@@ -8,6 +8,7 @@ Mesh2D :: struct {
 	num_elements: uint,
 }
 
+// destroy's the GPU buffer containing mesh data
 destroy_mesh :: proc(mesh: ^Mesh2D) {
 	sg.destroy_buffer(mesh.bindings.vertex_buffers[0])
 

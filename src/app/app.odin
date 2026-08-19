@@ -17,6 +17,11 @@ App :: struct {
 	Renderer:     renderer.Renderer,
 	InputManager: input.InputManager,
 
+	// fps stuff
+	CurrentFps:   u32,
+	FpsFramesAcc: i32,
+	FpsTimeAcc:   f32,
+
 	// memory management
 	Context:      runtime.Context,
 	Arena:        virtual.Arena,
@@ -78,11 +83,23 @@ _input_cb :: proc "c" (event: ^sapp.Event) {
 @(private)
 _frame_cb :: proc "c" () {
 	context = APP.Context
+
+	// delta time calculation
 	dt := f32(sapp.frame_duration())
 	dt = min(dt, utils.MAX_DELTA_TIME)
 
+	// frames per seconds calculation
+	APP.FpsFramesAcc += 1
+	APP.FpsTimeAcc += dt
+	if (APP.FpsTimeAcc > 1.0) {
+		APP.CurrentFps = u32(APP.FpsFramesAcc / i32(APP.FpsTimeAcc))
+
+		APP.FpsFramesAcc = 0
+		APP.FpsTimeAcc = 0
+	}
+
 	game.Update(&APP.Game, &APP.InputManager, dt)
-	renderer.Update(&APP.Renderer, &APP.Game)
+	renderer.Update(&APP.Renderer, &APP.Game, APP.CurrentFps)
 
 	// per-frame cleanup
 	input.Update(&APP.InputManager)

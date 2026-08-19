@@ -7,6 +7,7 @@ import "topdown_game:src/utils"
 
 import gmath "topdown_game:internal/game_math"
 import shaders "topdown_game:src/shaders/build"
+import sdtx "topdown_game:third_party/sokol/debugtext"
 import sg "topdown_game:third_party/sokol/gfx"
 import sglue "topdown_game:third_party/sokol/glue"
 import slog "topdown_game:third_party/sokol/log"
@@ -29,6 +30,9 @@ Init :: proc(renderer: ^Renderer) {
 	// setup device sokol sfx environment for platform specific graphics API like DirectX, OpenGL, etc
 	sg.setup({environment = sglue.environment(), logger = {func = slog.func}})
 	logger.infof("Backend: %v", sg.query_backend())
+
+	// setup sokol debug text
+	sdtx.setup({fonts = {0 = sdtx.font_kc853()}, logger = {func = slog.func}})
 
 	// pass action to clear framebuffer to black
 	renderer.default_pass_action = {
@@ -63,7 +67,7 @@ Init :: proc(renderer: ^Renderer) {
 	load_all_textures(renderer)
 }
 
-Update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
+Update :: proc(renderer: ^Renderer, g: ^game.Game2D, current_fps: u32) {
 	sg.begin_pass({action = renderer.default_pass_action, swapchain = sglue.swapchain()})
 	sg.apply_pipeline(renderer.default_pipeline)
 
@@ -93,6 +97,12 @@ Update :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 	DrawLayer(renderer, true)
 	clear(&renderer.draw_queue)
 
+	// ====================== Debug Overlay ========================
+	sdtx.canvas(f32(utils.DEFAULT_WINDOW_WIDTH) * 0.5, f32(utils.DEFAULT_WINDOW_HEIGHT) * 0.5)
+	sdtx.origin(1, 1)
+	sdtx.color3b(0, 255, 0)
+	sdtx.printf("fps: %d", current_fps)
+	sdtx.draw()
 
 	sg.end_pass()
 	sg.commit()
@@ -102,5 +112,6 @@ Cleanup :: proc(renderer: ^Renderer) {
 	mesh.destroy_mesh(&renderer.triangle_mesh)
 	mesh.destroy_mesh(&renderer.quad_mesh)
 
+	sdtx.shutdown()
 	sg.shutdown()
 }
