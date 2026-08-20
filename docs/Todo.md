@@ -76,7 +76,7 @@
 # GAME DESIGN **TODO: (Make a different md file for game design doc)**
 
 - **CORE GAMELOOP: Combat, weapons drops, loot, dungeon explore, GOAL: kill demon king**
-- World inspired by Terraria
+- **World inspired by Terraria**
     - World gets generated once using procedural noise techniques *multiple passes* and saved to file
     - Hand drawn structures are placed via procedural generation
     - 3 Major continents (Human, elf & Demon) each level rising with difficulty
@@ -89,7 +89,9 @@
     - Around 50 weapons
         - Only 5 to 10 different weapon classes
         - Rest approx 40 Weapons have special effects like burn, bleed
-- Art direction
+- **WorldMap inspired by CurseMark** 
+    - The demon continent has lava around it
+- **Art direction**
     - 2d topdown pixel art style
     - No outline characters and items (for eg: *Terrafactor* by Randy)
     - Tilemap tiles blend smoothly (for eg: *Tangy TD* by cakez's game )

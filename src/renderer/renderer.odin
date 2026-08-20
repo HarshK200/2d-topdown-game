@@ -91,12 +91,12 @@ Update :: proc(renderer: ^Renderer, g: ^game.Game2D, current_fps: u32) {
 
 	// Drawing Layer 1
 	push_tilemap_drawcmd(renderer, g)
-	DrawLayer(renderer, true)
+	DrawLayer(renderer, true, "layer0_spritesheet")
 	clear(&renderer.draw_queue)
 
 	// Drawing Layer 2
 	push_player_drawcmd(renderer, g)
-	DrawLayer(renderer, true)
+	DrawLayer(renderer, true, "layer1_spritesheet")
 	clear(&renderer.draw_queue)
 
 

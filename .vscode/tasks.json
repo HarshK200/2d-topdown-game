@@ -1,0 +1,40 @@
+{
+  "version": "0.2.0",
+  "tasks": [
+    {
+      "label": "build-debug-win32-d3d11",
+      "command": "odin run ./build_scripts -collection:topdown_game=. -out:./build_scripts/build.exe -- --debug --d3d11",
+      "presentation": {
+        "focus": false
+      }
+    },
+    {
+      "label": "build-release-win32-d3d11",
+      "command": "odin run ./build_scripts -collection:topdown_game=.  -out:./build_scripts/build.exe -- --release --d3d11",
+      "presentation": {
+        "focus": false
+      }
+    },
+    {
+      "label": "build-run-debug-win32-d3d11",
+      "command": "odin run ./build_scripts -collection:topdown_game=. -out:./build_scripts/build.exe -- --debug --d3d11 && build\\debug\\main.exe",
+      "presentation": {
+        "focus": true
+      }
+    },
+    {
+      "label": "build-run-release-win32-d3d11",
+      "command": "odin run ./build_scripts -collection:topdown_game=.  -out:./build_scripts/build.exe -- --release --d3d11 && build\\release\\main.exe",
+      "presentation": {
+        "focus": true
+      }
+    },
+    {
+      "label": "compile-shaders",
+      "command": "odin run ./build_scripts -collection:topdown_game=. -out:./build_scripts/build.exe -- --shader-only",
+      "presentation": {
+        "focus": false
+      }
+    }
+  ]
+}

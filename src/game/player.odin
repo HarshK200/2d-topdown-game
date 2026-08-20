@@ -1,5 +1,6 @@
 package game
 
+import "topdown_game:internal/logger"
 import gmath "topdown_game:internal/game_math"
 import "topdown_game:src/input"
 
@@ -18,7 +19,7 @@ init_player :: proc(g: ^Game2D) {
 	g.player.speed = 120.0
 
 	g.player.sprite = {
-		texture_id   = "PlayerSprite",
+		texture_id   = "layer1_spritesheet",
 		texel_coords = {0, 0},
 	}
 }
@@ -28,6 +29,7 @@ update_player :: proc(g: ^Game2D, im: ^input.InputManager, dt: f32) {
 	new_pos := g.player.position + (input_dir * g.player.speed * dt)
 
 	g.player.position = new_pos
+    logger.infof("New Player pos: %v", new_pos)
 }
 
 
