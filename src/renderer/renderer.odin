@@ -70,7 +70,7 @@ Update :: proc(renderer: ^Renderer, g: ^game.Game2D, current_fps: u32) {
 	sg.begin_pass({action = renderer.default_pass_action, swapchain = sglue.swapchain()})
 
 
-	// ====================== Per Frame Calculations ======================
+	// ================ Per frame uniforms calculations [pipeline independent] ================
 	frame_params := shaders.Frame_Params {
 		VIEW       = game.view_matrix_from_camera2d(&g.camera),
 		// FOLLOWS Y+ "Down" CONVENTION
@@ -89,14 +89,14 @@ Update :: proc(renderer: ^Renderer, g: ^game.Game2D, current_fps: u32) {
 	sg.apply_pipeline(renderer.default_pipeline)
 	sg.apply_uniforms(shaders.UB_frame_params, {ptr = &frame_params, size = size_of(frame_params)})
 
-	// Drawing Layer 1
+	// Drawing Layer 0
 	push_tilemap_drawcmd(renderer, g)
-	DrawLayer(renderer, true, "layer0_spritesheet")
+	DrawLayer(renderer, true, "layer0_texture_atlas")
 	clear(&renderer.draw_queue)
 
-	// Drawing Layer 2
+	// Drawing Layer 1
 	push_player_drawcmd(renderer, g)
-	DrawLayer(renderer, true, "layer1_spritesheet")
+	DrawLayer(renderer, true, "layer1_texture_atlas")
 	clear(&renderer.draw_queue)
 
 

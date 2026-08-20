@@ -12,7 +12,7 @@ Init :: proc(g: ^Game2D) {
 	init_player(g)
 	init_camera(g)
 
-	load_world(&g.world)
+	generate_world(&g.world)
 }
 
 Update :: proc(g: ^Game2D, im: ^input.InputManager, dt: f32) {

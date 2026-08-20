@@ -31,9 +31,10 @@ DrawLayer :: proc(renderer: ^Renderer, ignore_sorting: bool, layer_texture_id: s
 	// render sorted draw_queue
 	for i in 0 ..< len(renderer.draw_queue) {
 		draw_cmd := renderer.draw_queue[i]
+		// verify the correct texture atlas is being used
 		assert(
 			layer_texture_id == draw_cmd.texture_id,
-			"Texture id of draw command didn't match the current layer spritesheet texture_id",
+			"Texture id of draw command didn't match the current layer's textures_atlas id",
 		)
 
 		sg.apply_uniforms(

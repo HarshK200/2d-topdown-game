@@ -30,11 +30,7 @@ Chunk :: struct {
 // NOTE: no need to call load_world after generate as it populates the world passed in,
 // But you do have to save the generated world to a file, this function doesn't do seralization
 generate_world :: proc(w: ^World) {
-}
-
-// load the game world from file and populates the passed in world's chunks map
-load_world :: proc(w: ^World) {
-	logger.info("Loading game world")
+	logger.info("Generating game world")
 
 	// TODO: use perlin noise to generate a world i.e. populating the worlds chunks in this function
 	// for the passed in world instance. The world generation should follow the rules:
@@ -45,317 +41,47 @@ load_world :: proc(w: ^World) {
 
 
 	// TESTING (populating world with random chunk data, only one chunk at (0, 0))
-	// TODO: use noise to generate world instead
-    // odinfmt: disable
-	w.chunks[{0, 0}] = {
-		tiles = {
-            // Row 0
-            {
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {16, 0}}},
-            },
-            // Row 1
-            {
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {16, 0}}},
-            },
-            // Row 2
-            {
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {16, 0}}},
-            },
-            // Row 3
-            {
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {16, 0}}},
-            },
-            // Row 4
-            {
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {16, 0}}},
-            },
-            // Row 5
-            {
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {16, 0}}},
-            },
-            // Row 6
-            {
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {16, 0}}},
-            },
-            // Row 7
-            {
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {16, 0}}},
-            },
-            // Row 8
-            {
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {16, 0}}},
-            },
-            // Row 9
-            {
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {16, 0}}},
-            },
-            // Row 10
-            {
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {16, 0}}},
-            },
-            // Row 11
-            {
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {16, 0}}},
-            },
-            // Row 12
-            {
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {16, 0}}},
-            },
-            // Row 13
-            {
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {16, 0}}},
-            },
-            // Row 14
-            {
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {16, 0}}},
-            },
-            // Row 15
-            {
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {64, 0}}},
-                {tile_type = .GRASS, scale = {16, 16}, sprite2d = {texture_id = "layer0_spritesheet", texel_coords = {0, 0}}},
-            },
-        },
+	temp_chunk_coords := [?]gmath.vec2i {
+		{0, 0},
+		{1, 0},
+		{-1, 0},
+		{0, 1},
+		{0, -1},
+		{1, -1},
+		{-1, -1},
+		{-1, 1},
+		{1, 1},
 	}
-    // odinfmt: enable
+
+	// no of chunks
+	for temp_coord in temp_chunk_coords {
+		texture_id := "layer0_texture_atlas"
+		texture_coords := gmath.vec2{64, 0}
+		scale := gmath.vec2{16, 16}
+		tile_type: TileType = .GRASS
+
+
+		tiles: [CHUNK_SIZE][CHUNK_SIZE]Tile
+		// no of tiles per chunk
+		for tile_y in 0 ..< CHUNK_SIZE {
+			for tile_x in 0 ..< CHUNK_SIZE {
+				tiles[tile_y][tile_x] = {
+					tile_type = tile_type,
+					scale = scale,
+					sprite2d = {texture_id = texture_id, texel_coords = texture_coords},
+				}
+			}
+		}
+
+		w.chunks[temp_coord] = {
+			tiles = tiles,
+		}
+	}
+
+}
+
+// load the game world from file and populates the passed in world's chunks map
+load_world :: proc(w: ^World) {
 }
 
 // converts world space coordinates to chunk space coordinates and returns

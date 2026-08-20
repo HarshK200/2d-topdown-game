@@ -19,8 +19,8 @@ Texture2D :: struct {
 load_all_textures :: proc(renderer: ^Renderer) {
 	// texture file paths
 	texture_paths: map[string]string
-	texture_paths["layer0_spritesheet"] = "./assets/textures/layer0_spritesheet.png"
-	texture_paths["layer1_spritesheet"] = "./assets/textures/layer1_spritesheet.png"
+	texture_paths["layer0_texture_atlas"] = "./assets/textures/layer0_texture_atlas.png"
+	texture_paths["layer1_texture_atlas"] = "./assets/textures/layer1_texture_atlas.png"
 
 	// reserve space for 2 textures as i'm uploading them
 	reserve(&renderer.textures, 2)
