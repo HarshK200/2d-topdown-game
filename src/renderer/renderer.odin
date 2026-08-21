@@ -14,16 +14,16 @@ import slog "topdown_game:third_party/sokol/log"
 
 
 Renderer :: struct {
-	default_pass_action:   sg.Pass_Action,
-	textures:              map[string]Texture2D,
+	default_pass_action: sg.Pass_Action,
+	textures:            map[string]Texture2D,
 
 	// shader pipelines
-	tilemap_pipeline:      sg.Pipeline,
-	default_pipeline:      sg.Pipeline,
+	tilemap_pipeline:    sg.Pipeline,
+	default_pipeline:    sg.Pipeline,
 
 	// premitive 2d meshs
-	triangle_mesh:         mesh.Mesh2D,
-	quad_mesh:             mesh.Mesh2D,
+	triangle_mesh:       mesh.Mesh2D,
+	quad_mesh:           mesh.Mesh2D,
 }
 
 Init :: proc(renderer: ^Renderer, g: ^game.Game2D) {

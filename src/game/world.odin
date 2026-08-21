@@ -1,5 +1,6 @@
 package game
 
+import "core:math/rand"
 import gmath "topdown_game:internal/game_math"
 import "topdown_game:internal/logger"
 import "topdown_game:src/utils"
@@ -28,15 +29,8 @@ Chunk :: struct {
 //
 // NOTE: no need to call load_world after generate as it populates the world passed in,
 // But you do have to save the generated world to a file, this function doesn't do seralization
-generate_world :: proc(w: ^World) {
-	logger.info("Generating game world")
-
-	// TODO: use perlin noise to generate a world i.e. populating the worlds chunks in this function
-	// for the passed in world instance. The world generation should follow the rules:
-	// 1. Generated world is a limited size like terraria
-	// 2. World is divided into 3 major contients: Human, Elf, Demon
-	// 3. World shape is Semi-circle like plant tales, dividing the continent into 3 pizza slices and one core in the center
-	// 4. Difficulty rises as the player stays away from the core i.e. the Human continent center
+temp_generate_world :: proc(w: ^World) {
+	logger.info("Generating temp game world")
 
 
 	// TESTING (populating world with random chunk data, only one chunk at (0, 0))
@@ -47,7 +41,6 @@ generate_world :: proc(w: ^World) {
 		{0, 1},
 		{0, -1},
 		{1, -1},
-		{-1, -1},
 		{-1, 1},
 		{1, 1},
 	}
@@ -55,7 +48,7 @@ generate_world :: proc(w: ^World) {
 	// no of chunks
 	for temp_coord in temp_chunk_coords {
 		texture_id := "tilemap_texture_atlas"
-		texture_coords := gmath.vec2{64, 0}
+		tiles_texture_coords := []gmath.vec2{{64, 0}, {80, 0}}
 		scale := gmath.vec2{utils.TILE_SIZE, utils.TILE_SIZE}
 		tile_type: TileType = .GRASS
 
@@ -67,7 +60,10 @@ generate_world :: proc(w: ^World) {
 				tiles[tile_y][tile_x] = {
 					tile_type = tile_type,
 					scale = scale,
-					sprite2d = {texture_id = texture_id, texel_coords = texture_coords},
+					sprite2d = {
+						texture_id = texture_id,
+						texel_coords = rand.choice(tiles_texture_coords),
+					},
 				}
 			}
 		}
@@ -76,6 +72,17 @@ generate_world :: proc(w: ^World) {
 			tiles = tiles,
 		}
 	}
+
+}
+
+// TODO: use perlin noise to generate a world i.e. populating the worlds chunks in this function
+// for the passed in world instance. The world generation should follow the rules:
+// 1. Generated world is a limited size like terraria
+// 2. World is divided into 3 major contients: Human, Elf, Demon
+// 3. World shape is Semi-circle like plant tales, dividing the continent into 3 pizza slices and one core in the center
+// 4. Difficulty rises as the player stays away from the core i.e. the Human continent center
+generate_world :: proc(game: ^Game2D) {
+	logger.info("Procedurally generating game world")
 
 }
 
