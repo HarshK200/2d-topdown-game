@@ -8,37 +8,29 @@
 // =========================== VERTEX SHADER ===========================
 @vs vs
 // uniforms set by apply_uniform()
-layout(binding=0) uniform default_frame_params {
+layout(binding=0) uniform tilemap_frame_params {
     mat4 VIEW;
     mat4 PROJECTION;
-};
-layout(binding=1) uniform default_entity_params {
-    mat4 MODEL;
-    vec2 UV_MIN;
-    vec2 UV_MAX;
 };
 
 // vertex attributes baked into mesh vertices
 in vec3 quad_pos;
 in vec2 quad_texcoords;
 
-// output attributes sending to fragment shader
 out vec2 uv;
 
 void main() {
-    // NOTE: gl_Position coordinates MUST be in clip space
-    gl_Position = PROJECTION * VIEW * MODEL * vec4(quad_pos, 1.0);
-
-    uv = mix(UV_MIN, UV_MAX, quad_texcoords);
+    // TODO: make the MODEL matrix
+    gl_Position = PROJECTION * VIEW * vec4(quad_pos, 1.0);
+    uv = quad_texcoords;
 }
 @end
-
 
 // =========================== FRAGMENT SHADER ===========================
 @fs fs
 // uniforms set by apply_bindings()
-layout(binding=0) uniform texture2D default_fs_tex;
-layout(binding=0) uniform sampler default_fs_smp;
+layout(binding=0) uniform texture2D tilemap_fs_tex;
+layout(binding=0) uniform sampler tilemap_fs_smp;
 
 // attributes comming in from vertex shader
 in vec2 uv;
@@ -47,7 +39,7 @@ in vec2 uv;
 out vec4 out_color;
 
 void main() {
-    vec4 tex_color = texture(sampler2D(default_fs_tex, default_fs_smp), uv);
+    vec4 tex_color = texture(sampler2D(tilemap_fs_tex, tilemap_fs_smp), uv);
     // discard completely trasparent values
     if (tex_color.a < 0.001) {
         discard;
@@ -58,4 +50,4 @@ void main() {
 }
 @end
 
-@program default vs fs
+@program tilemap vs fs

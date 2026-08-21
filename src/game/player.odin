@@ -18,7 +18,7 @@ init_player :: proc(g: ^Game2D) {
 	g.player.speed = 120.0
 
 	g.player.sprite = {
-		texture_id   = "layer1_texture_atlas",
+		texture_id   = "entity_texture_atlas",
 		texel_coords = {0, 0},
 	}
 }

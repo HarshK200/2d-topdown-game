@@ -17,7 +17,6 @@ Renderer :: struct {
 	default_pipeline:    sg.Pipeline,
 	default_pass_action: sg.Pass_Action,
 	textures:            map[string]Texture2D,
-	draw_queue:          [dynamic]DrawCommand,
 
 	// premitive 2d meshs
 	triangle_mesh:       mesh.Mesh2D,
@@ -47,8 +46,8 @@ Init :: proc(renderer: ^Renderer) {
 			shader = default_shader,
 			layout = {
 				attrs = {
-					shaders.ATTR_default_position = {format = .FLOAT3},
-					shaders.ATTR_default_texcoord0 = {format = .FLOAT2},
+					shaders.ATTR_default_quad_pos = {format = .FLOAT3},
+					shaders.ATTR_default_quad_texcoords = {format = .FLOAT2},
 				},
 			},
 			index_type = .UINT16,
@@ -71,33 +70,38 @@ Update :: proc(renderer: ^Renderer, g: ^game.Game2D, current_fps: u32) {
 
 
 	// ================ Per frame uniforms calculations [pipeline independent] ================
-	frame_params := shaders.Frame_Params {
-		VIEW       = game.view_matrix_from_camera2d(&g.camera),
-		// FOLLOWS Y+ "Down" CONVENTION
-		PROJECTION = gmath.Orthographic_Mat4_RH_ZO(
-			0,
-			utils.INTERNAL_RENDER_RESOLUTION.x,
-			utils.INTERNAL_RENDER_RESOLUTION.y,
-			0,
-			g.camera.near,
-			g.camera.far,
-		),
-	}
+	VIEW := game.view_matrix_from_camera2d(&g.camera)
+	// FOLLOWS Y+ "Down" CONVENTION
+	PROJECTION := gmath.Orthographic_Mat4_RH_ZO(
+		0,
+		utils.INTERNAL_RENDER_RESOLUTION.x,
+		utils.INTERNAL_RENDER_RESOLUTION.y,
+		0,
+		g.camera.near,
+		g.camera.far,
+	)
+
+
+	// ====================== Tilemap Shader Pipeline ========================
+	// sg.apply_pipeline(renderer.tilemap_pipeline)
+	// sg.apply_uniforms(shaders.UB_frame_params, {ptr = &frame_params, size = size_of(frame_params)})
+	// Draw tilemap layer
+	// DrawTilemapLayer(renderer, g)
 
 
 	// ====================== Default Shader Pipeline ========================
 	sg.apply_pipeline(renderer.default_pipeline)
-	sg.apply_uniforms(shaders.UB_frame_params, {ptr = &frame_params, size = size_of(frame_params)})
+	frame_params := shaders.Default_Frame_Params {
+		VIEW       = VIEW,
+		PROJECTION = PROJECTION,
+	}
+	sg.apply_uniforms(
+		shaders.UB_default_frame_params,
+		{ptr = &frame_params, size = size_of(frame_params)},
+	)
 
-	// Drawing Layer 0
-	push_tilemap_drawcmd(renderer, g)
-	DrawLayer(renderer, true, "layer0_texture_atlas")
-	clear(&renderer.draw_queue)
-
-	// Drawing Layer 1
-	push_player_drawcmd(renderer, g)
-	DrawLayer(renderer, true, "layer1_texture_atlas")
-	clear(&renderer.draw_queue)
+	// Draw entity layer
+	DrawEntityLayer(renderer, g)
 
 
 	// ====================== Debug Overlay ========================

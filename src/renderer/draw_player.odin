@@ -5,8 +5,12 @@ import "topdown_game:src/game"
 
 import gmath "topdown_game:internal/game_math"
 import shaders "topdown_game:src/shaders/build"
+import sg "topdown_game:third_party/sokol/gfx"
 
-push_player_drawcmd :: proc(renderer: ^Renderer, g: ^game.Game2D) {
+draw_player :: proc(renderer: ^Renderer, g: ^game.Game2D, texture: Texture2D) {
+	// the texture_id used for drawing current layer must match the entity sprite texture_id
+	assert(texture.texture_id == g.player.sprite.texture_id)
+
 	model :=
 		gmath.Translate_Mat4({g.player.position.x, g.player.position.y, 0.0}) *
 		gmath.Scale_Mat4({g.player.scale.x, g.player.scale.y, 1.0})
@@ -31,17 +35,15 @@ push_player_drawcmd :: proc(renderer: ^Renderer, g: ^game.Game2D) {
 	uv_max.x /= f32(player_tex.width)
 	uv_max.y /= f32(player_tex.height)
 
-	entity_params := shaders.Entity_Params {
+	entity_params := shaders.Default_Entity_Params {
 		MODEL  = model,
 		UV_MIN = uv_min,
 		UV_MAX = uv_max,
 	}
 
-	draw_cmd: DrawCommand = {
-		pos          = g.player.position,
-		texture_id   = player_tex.texture_id,
-		entity_params = entity_params,
-	}
-
-	append(&renderer.draw_queue, draw_cmd)
+	sg.apply_uniforms(
+		shaders.UB_default_entity_params,
+		{size = size_of(entity_params), ptr = &entity_params},
+	)
+	sg.draw(renderer.quad_mesh.base_element, renderer.quad_mesh.num_elements, 1)
 }

@@ -1,6 +1,12 @@
 package utils
 
+// =============== RENDERER CONSTANTS ===============
 INTERNAL_RENDER_RESOLUTION :: [2]f32{640, 360}
 DEFAULT_WINDOW_WIDTH :: i32(1280)
 DEFAULT_WINDOW_HEIGHT :: i32(720)
 MAX_DELTA_TIME :: f32(1.0 / 10.0)
+
+
+// =============== GAME CONSTANTS ===============
+TILE_SIZE :: 16 // 16x16 pixels
+CHUNK_SIZE :: 16 // 16x16 tiles
