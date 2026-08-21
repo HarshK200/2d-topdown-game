@@ -66,7 +66,7 @@ _init_cb :: proc "c" () {
 	APP.Context = context
 
 	game.Init(&APP.Game)
-	renderer.Init(&APP.Renderer)
+	renderer.Init(&APP.Renderer, &APP.Game)
 }
 
 @(private)

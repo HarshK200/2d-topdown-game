@@ -7,7 +7,7 @@ import sg "topdown_game:third_party/sokol/gfx"
 import stbi "vendor:stb/image"
 
 Texture2D :: struct {
-	texture_id: string,
+	id: string,
 	sg_img:     sg.Image,
 	sg_view:    sg.View,
 	width:      i32,
@@ -64,7 +64,7 @@ decode_and_upload_tex :: proc(texture_id: string, img_data: []byte) -> Texture2D
 	view_handle := sg.make_view({texture = {image = img_handle}})
 
 	return {
-        texture_id = texture_id,
+        id = texture_id,
 		sg_img = img_handle,
 		sg_view = view_handle,
 		width = width,

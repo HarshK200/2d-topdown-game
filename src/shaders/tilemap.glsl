@@ -13,16 +13,27 @@ layout(binding=0) uniform tilemap_frame_params {
     mat4 PROJECTION;
 };
 
-// vertex attributes baked into mesh vertices
+// vertex attributes baked into mesh vertices bindings
 in vec3 quad_pos;
 in vec2 quad_texcoords;
+// going to be set in the bindings per frame
+in vec2 tile_pos;
+in vec2 tile_scale;
+in vec2 uv_min;
+in vec2 uv_max;
 
 out vec2 uv;
 
 void main() {
-    // TODO: make the MODEL matrix
-    gl_Position = PROJECTION * VIEW * vec4(quad_pos, 1.0);
-    uv = quad_texcoords;
+    mat4 MODEL = mat4(
+        vec4(tile_scale.x, 0.0,          0.0, 0.0),
+        vec4(0.0,          tile_scale.y, 0.0, 0.0),
+        vec4(0.0,          0.0,          1.0, 0.0),
+        vec4(tile_pos.x,   tile_pos.y,   0.0, 1.0)
+    );
+
+    gl_Position = PROJECTION * VIEW * MODEL * vec4(quad_pos, 1.0);
+    uv = mix(uv_min, uv_max, quad_texcoords);
 }
 @end
 

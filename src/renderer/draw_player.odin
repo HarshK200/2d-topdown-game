@@ -9,7 +9,7 @@ import sg "topdown_game:third_party/sokol/gfx"
 
 draw_player :: proc(renderer: ^Renderer, g: ^game.Game2D, texture: Texture2D) {
 	// the texture_id used for drawing current layer must match the entity sprite texture_id
-	assert(texture.texture_id == g.player.sprite.texture_id)
+	assert(texture.id == g.player.sprite.texture_id)
 
 	model :=
 		gmath.Translate_Mat4({g.player.position.x, g.player.position.y, 0.0}) *
