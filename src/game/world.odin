@@ -1,5 +1,6 @@
 package game
 
+import "core:math"
 import "core:math/rand"
 import gmath "topdown_game:internal/game_math"
 import "topdown_game:internal/logger"
@@ -12,9 +13,9 @@ World :: struct {
 }
 
 TileType :: enum {
-	GRASS,
-	DIRT,
-	WATER,
+	GRASS = 0,
+	WATER = 1,
+	// DIRT  = 2,
 }
 Tile :: struct {
 	tile_type: TileType, // GRASS, DIRT, WATER
@@ -48,21 +49,21 @@ temp_generate_world :: proc(w: ^World) {
 	// no of chunks
 	for temp_coord in temp_chunk_coords {
 		texture_id := "tilemap_texture_atlas"
-		tiles_texture_coords := []gmath.vec2{{64, 0}, {80, 0}}
+		tiles_texture_coords := []gmath.vec2{{0, 0}, {0, 16}, {0, 32}}
 		scale := gmath.vec2{utils.TILE_SIZE, utils.TILE_SIZE}
-		tile_type: TileType = .GRASS
 
 
 		tiles: [utils.CHUNK_SIZE][utils.CHUNK_SIZE]Tile
 		// no of tiles per chunk
 		for tile_y in 0 ..< utils.CHUNK_SIZE {
 			for tile_x in 0 ..< utils.CHUNK_SIZE {
+				tile_type := rand.choice_enum(TileType)
 				tiles[tile_y][tile_x] = {
 					tile_type = tile_type,
 					scale = scale,
 					sprite2d = {
 						texture_id = texture_id,
-						texel_coords = rand.choice(tiles_texture_coords),
+						texel_coords = tiles_texture_coords[tile_type],
 					},
 				}
 			}
@@ -108,8 +109,12 @@ world_to_tile_coords :: proc(world_coords: gmath.vec2) -> gmath.vec2i {
 // NOTE: tile_idx x is left to right and y is top to down, following Y+ Down convention
 tile_world_coords :: proc(tile_idx: gmath.vec2i, chunk_coords: gmath.vec2i) -> gmath.vec2 {
 	world_coords: gmath.vec2
-	world_coords.x = ((f32(chunk_coords.x) * utils.CHUNK_SIZE) + f32(tile_idx.x)) * utils.TILE_SIZE
-	world_coords.y = ((f32(chunk_coords.y) * utils.CHUNK_SIZE) + f32(tile_idx.y)) * utils.TILE_SIZE
+	world_coords.x = math.floor(
+		((f32(chunk_coords.x) * utils.CHUNK_SIZE) + f32(tile_idx.x)) * utils.TILE_SIZE,
+	)
+	world_coords.y = math.floor(
+		((f32(chunk_coords.y) * utils.CHUNK_SIZE) + f32(tile_idx.y)) * utils.TILE_SIZE,
+	)
 
 	return world_coords
 }

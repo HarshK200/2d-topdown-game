@@ -84,10 +84,11 @@ _get_caller_base_loc :: proc(location := #caller_location) -> string {
 // ===================== DEBUG =====================
 
 // NOTE: make sure you have called init() to configure logger
+// Debug doesn't have color set
 debug :: proc(text: string, location := #caller_location) {
 	if (Level.Debug < _config.Minimum_Level) {return}
 
-	_log("[DEBUG]", Debug_Color, location, true, text)
+	_log("[DEBUG]", Debug_Color, location, false, text)
 }
 
 // NOTE: make sure you have called init() to configure logger
