@@ -17,14 +17,17 @@ TileType :: enum {
 	WATER = 1,
 	// DIRT  = 2,
 }
+
 Tile :: struct {
 	tile_type: TileType, // GRASS, DIRT, WATER
 	scale:     gmath.vec2,
 	sprite2d:  Sprite2D, // which texture should be used for this tile
 }
+
 Chunk :: struct {
 	tiles: [utils.CHUNK_SIZE][utils.CHUNK_SIZE]Tile, // 2d array of CHUNK_SIZExCHUNK_SIZE tiles
 }
+
 
 // Generates the game world using noise and populates the passed in world's chunks map
 //
@@ -73,26 +76,32 @@ temp_generate_world :: proc(w: ^World) {
 			tiles = tiles,
 		}
 	}
-
 }
 
 // TODO: use perlin noise to generate a world i.e. populating the worlds chunks in this function
 // for the passed in world instance. The world generation should follow the rules:
-// 1. Generated world is a limited size like terraria
+// 1. Decide the size of the world *like terraria*
 // 2. World is divided into 3 major contients: Human, Elf, Demon
-// 3. World shape is Semi-circle like plant tales, dividing the continent into 3 pizza slices and one core in the center
-// 4. Difficulty rises as the player stays away from the core i.e. the Human continent center
+// 3. World is 3 seperate major islands, each representing a country
+// 4. Difficulty rises as the player stays away from the core/starting point of each continent i.e. the starter village for Human continent
 generate_world :: proc(game: ^Game2D) {
 	logger.info("Procedurally generating game world")
 
+	// generate noise map using perlin noise
+	NoiseMap: []gmath.vec2 // value range between 0..1
 }
 
 // load the game world from file and populates the passed in world's chunks map
 load_world :: proc(w: ^World) {
 }
 
+save_world :: proc(w: ^World) {
+}
+
+
+// =============================== COORDINATE CONVERSTION HELPERS ===============================
+
 // converts world space coordinates to chunk space coordinates and returns
-//
 // NOTE: world coords are 1 unit = 1 pixel
 world_to_chunk_coords :: proc(world_coords: gmath.vec2) -> gmath.vec2i {
 	result := gmath.Floor(world_coords / (utils.CHUNK_SIZE * utils.TILE_SIZE))

@@ -17,7 +17,7 @@ Init :: proc(g: ^Game2D) {
 
 Update :: proc(g: ^Game2D, im: ^input.InputManager, dt: f32) {
 	update_player(g, im, dt)
-	update_camera(g)
+	update_camera(g, im, dt)
 }
 
 

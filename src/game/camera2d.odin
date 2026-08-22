@@ -1,9 +1,13 @@
 package game
 
+import "core:math"
 import gmath "topdown_game:internal/game_math"
+import "topdown_game:src/input"
+import "topdown_game:src/utils"
 
 Camera2D :: struct {
 	position: gmath.vec2,
+	zoom:     f32,
 	near:     f32,
 	far:      f32,
 
@@ -12,17 +16,24 @@ Camera2D :: struct {
 }
 
 init_camera :: proc(g: ^Game2D) {
-	g.camera.position = {-320.0, -180.0} // centering the camera on player i.e. at (0, 0) i.e. topleft
-	// TODO: check if it is fine to have -1 and 1 as near/far values when using D3D11
+	g.camera.position = {0.0, 0.0}
+	g.camera.zoom = 1
 	g.camera.near = -1
 	g.camera.far = 1
 }
 
-// TODO: pass delta time
-update_camera :: proc(g: ^Game2D) {
+update_camera :: proc(g: ^Game2D, im: ^input.InputManager, dt: f32) {
 	g.camera.position = g.player.position
-    g.camera.position.x -= 320.0
-    g.camera.position.y -= 180.0
+
+	// camera zoom
+	if (utils.ENABLE_CAMERA_ZOOM) {
+		if (input.IsActionPressed(im, .ZOOM_IN)) {
+			g.camera.zoom += 0.025
+		}
+		if (input.IsActionPressed(im, .ZOOM_OUT)) {
+			g.camera.zoom = math.max(g.camera.zoom - 0.025, 0.0001)
+		}
+	}
 }
 
 /*
@@ -35,7 +46,15 @@ update_camera :: proc(g: ^Game2D) {
     we reverse the order of SRT i.e. it becomes TRS i.e. Translate * Rotate * Scale
 */
 view_matrix_from_camera2d :: proc(camera: ^Camera2D) -> gmath.mat4 {
-	view_mat := gmath.Translate_Mat4({-camera.position.x, -camera.position.y, 0.0})
+	CAMERA_OFFSET_CENTER :: gmath.vec2 {
+		(-utils.INTERNAL_RENDER_RESOLUTION.x / 2),
+		(-utils.INTERNAL_RENDER_RESOLUTION.y / 2),
+	} // centering the camera on player i.e. at (0, 0) i.e. topleft
+
+	view_mat :=
+		gmath.Translate_Mat4({-CAMERA_OFFSET_CENTER.x, -CAMERA_OFFSET_CENTER.y, 0.0}) *
+		gmath.Scale_Mat4({camera.zoom, camera.zoom, 1.0}) *
+		gmath.Translate_Mat4({-camera.position.x, -camera.position.y, 0.0})
 
 	return view_mat
 }

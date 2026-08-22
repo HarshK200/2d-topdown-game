@@ -78,6 +78,8 @@ _input_cb :: proc "c" (event: ^sapp.Event) {
 		input.RegisterKeyboardInput(&APP.InputManager, event)
 	case .MOUSE_MOVE:
 		input.RegisterMouseMove(&APP.InputManager, event)
+	case .MOUSE_SCROLL:
+		input.RegisterMouseScroll(&APP.InputManager, event)
 	}
 }
 

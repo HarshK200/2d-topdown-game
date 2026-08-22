@@ -118,6 +118,7 @@ Update :: proc(renderer: ^Renderer, g: ^game.Game2D, current_fps: u32) {
 		shaders.UB_tilemap_frame_params,
 		{ptr = &tilemap_frame_params, size = size_of(tilemap_frame_params)},
 	)
+
 	// Draw tilemap layer
 	DrawTilemapLayer(renderer, g)
 

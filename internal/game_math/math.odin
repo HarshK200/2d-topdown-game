@@ -160,3 +160,8 @@ InvOrthographic_Mat4 :: proc(OrthoMatrix: mat4) -> mat4 {
 
 	return result
 }
+
+
+// Returns a noise value based on a seed
+PerlineNoise :: proc(x, y, seed: i32) {
+}
